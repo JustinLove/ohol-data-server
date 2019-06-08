@@ -21,7 +21,7 @@ class CreateLives < ActiveRecord::Migration[5.2]
       t.integer :killer
       t.string :name
 
-      t.index [:server_id, :epoch, :playerid]
+      t.index [:server_id, :epoch, :playerid], :unique => true
       t.index [:server_id, :epoch, :parent]
       t.index :account_hash
     end

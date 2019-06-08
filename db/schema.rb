@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2019_06_08_150707) do
     t.string "name"
     t.index ["account_hash"], name: "index_lives_on_account_hash"
     t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
-    t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid"
+    t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid", unique: true
   end
 
   create_table "servers", force: :cascade do |t|
