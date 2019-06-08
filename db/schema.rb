@@ -10,10 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_07_162000) do
+ActiveRecord::Schema.define(version: 2019_06_08_150707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "lives", force: :cascade do |t|
+    t.integer "server_id", null: false
+    t.integer "epoch", null: false
+    t.integer "playerid", null: false
+    t.string "account_hash", null: false
+    t.datetime "birth_time"
+    t.integer "birth_x"
+    t.integer "birth_y"
+    t.integer "birth_population"
+    t.datetime "death_time"
+    t.integer "death_x"
+    t.integer "death_y"
+    t.integer "death_population"
+    t.integer "parent"
+    t.integer "chain"
+    t.string "gender"
+    t.float "age"
+    t.string "cause"
+    t.integer "killer"
+    t.string "name"
+    t.index ["account_hash"], name: "index_lives_on_account_hash"
+    t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
+    t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid"
+  end
 
   create_table "servers", force: :cascade do |t|
     t.string "server_name"
