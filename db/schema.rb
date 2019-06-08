@@ -17,8 +17,6 @@ ActiveRecord::Schema.define(version: 2019_06_07_162000) do
 
   create_table "servers", force: :cascade do |t|
     t.string "server_name"
-    t.datetime "created_at"
-    t.datetime "removed_at"
   end
 
 end
