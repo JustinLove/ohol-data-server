@@ -2,13 +2,37 @@ require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 
 module Import
-  def self.load_dir(dir, time_range = (Time.at(0)..Time.now))
-    OHOLFamilyTrees::History.new.load_dir(dir) do |path|
-      p path
+  def self.load_cache(cache)
+    Dir.foreach(cache) do |dir|
+      next unless dir.match("lifeLog_")
+      next if dir.match('bigserver')
+      p dir
+      load_dir(dir, cache)
+    end
+  end
+
+  def self.load_dir(dir, cache)
+    OHOLFamilyTrees::History.new.load_dir(File.join(cache, dir)) do |path|
+      file_path = File.join(cache, dir, path)
+      cache_path = File.join(dir, path)
+      #p cache_path
+      file_date = File.mtime(file_path)
+      fetched_at = Time.now
+      lifelog = LifelogFile.find_by_path(cache_path)
+      #p [file_date, lifelog.fetched_at, file_date > lifelog.fetched_at]
+      next if lifelog && file_date < lifelog.fetched_at
+
+      p "importing #{cache_path}"
       if path.match('_names.txt')
-        load_names(path)
+        load_names(file_path)
       else
-        load_log(path)
+        load_log(file_path)
+      end
+
+      if lifelog
+        lifelog.update(:fetched_at => fetched_at)
+      else
+        LifelogFile.create(:path => cache_path, :fetched_at => fetched_at)
       end
     end
   end
@@ -32,10 +56,10 @@ module Import
       key = key_fields(serverid, epoch, life.playerid)
       fields = {}
       if life.birth_time
-        fields.merge(birth_fields(life))
+        fields.merge!(birth_fields(life))
       end
       if life.death_time
-        fields.merge(death_fields(life))
+        fields.merge!(death_fields(life))
       end
       Life.find_or_initialize_by(key).update(fields)
     end
@@ -83,7 +107,7 @@ module Import
 
     file = File.open(path, "r", :external_encoding => 'ASCII-8BIT')
 
-    while namelog = OHOLFamilyTrees::Namelog.next_line(file)
+    while namelog = OHOLFamilyTrees::Namelog.next_log(file)
       Life.where(:server_id => serverid, :playerid => namelog.playerid)
         .order("epoch desc").limit(1)
         .update(:name => namelog.name)
