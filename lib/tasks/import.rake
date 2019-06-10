@@ -3,7 +3,13 @@ namespace :import do
     require 'import'
     p 'before', Life.count
 
-    Import.load_dir("../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/")
+    cache = "../ohol-family-trees/cache/"
+    Dir.foreach(cache) do |dir|
+      next unless dir.match("lifeLog_")
+      next if dir.match('bigserver')
+      p dir
+      Import.load_dir(cache+dir)
+    end
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday.txt"
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_07_Friday.txt"
     #Import.load_log(path)

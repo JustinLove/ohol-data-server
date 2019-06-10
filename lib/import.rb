@@ -3,24 +3,13 @@ require 'ohol-family-trees/history'
 
 module Import
   def self.load_dir(dir, time_range = (Time.at(0)..Time.now))
-    Dir.foreach(dir) do |path|
+    OHOLFamilyTrees::History.new.load_dir(dir) do |path|
       p path
-      dateparts = path.match(/(\d{4})_(\d{2})\w+_(\d{2})/)
-      next unless dateparts
-
-      approx_log_time = Time.gm(dateparts[1], dateparts[2], dateparts[3])
-      next unless time_range.cover?(approx_log_time)
-
-      p path
-
-      if block_given?
-        yield File.join(dir, path)
-      elsif path.match('_names.txt')
-        load_names(File.join(dir, path))
+      if path.match('_names.txt')
+        load_names(path)
       else
-        load_log(File.join(dir, path))
+        load_log(path)
       end
-
     end
   end
 
@@ -36,7 +25,8 @@ module Import
       log = OHOLFamilyTrees::Lifelog.create(line, epoch, server)
 
       if epoch.nil?
-        Life.where(:server_id => serverid).where('birth_time < ?', Time.at(log.time)).maximum(:epoch) || 0
+        epoch = Life.where(:server_id => serverid).where('birth_time < ?', Time.at(log.time)).maximum(:epoch) || 0
+        log.epoch = epoch
       end
 
       if log.kind_of?(OHOLFamilyTrees::Lifelog::Birth)
@@ -99,9 +89,7 @@ module Import
 
     file = File.open(path, "r", :external_encoding => 'ASCII-8BIT')
 
-    while line = file.gets
-      namelog = OHOLFamilyTrees::Namelog.new(line)
-
+    while namelog = OHOLFamilyTrees::Namelog.next_line(file)
       Life.where(:server_id => serverid, :playerid => namelog.playerid)
         .order("epoch desc").limit(1)
         .update(:name => namelog.name)
