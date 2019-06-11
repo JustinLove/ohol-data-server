@@ -5,7 +5,6 @@ module Import
   def self.load_cache(cache)
     Dir.foreach(cache) do |dir|
       next unless dir.match("lifeLog_")
-      next if dir.match('bigserver')
       p dir
       load_dir(dir, cache)
     end
@@ -61,6 +60,8 @@ module Import
       if life.death_time
         fields.merge!(death_fields(life))
       end
+      #p key
+      #p fields
       Life.find_or_initialize_by(key).update(fields)
     end
   end
@@ -80,7 +81,7 @@ module Import
       :birth_x => life.birth_coords && life.birth_coords[0],
       :birth_y => life.birth_coords && life.birth_coords[1],
       :birth_population => life.birth_population,
-      :parent => life.parent == OHOLFamilyTrees::Lifelog::NoParent ? -1 : life.parent,
+      :parent => life.parentid == OHOLFamilyTrees::Lifelog::NoParent ? -1 : life.parentid,
       :chain => life.chain,
       :gender => life.gender,
     }
