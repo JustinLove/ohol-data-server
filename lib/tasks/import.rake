@@ -14,4 +14,13 @@ namespace :import do
 
     p 'after', Life.count
   end
+
+  task :update => :environment do
+    require 'import'
+    p 'before', Life.count
+
+    Import.fetch
+
+    p 'after', Life.count
+  end
 end

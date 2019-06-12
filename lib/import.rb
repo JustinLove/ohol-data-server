@@ -1,10 +1,18 @@
 require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 require 'ohol-family-trees/lifelog_cache'
+require 'ohol-family-trees/lifelog_server'
 
 module Import
   def self.load_cache(cache)
     OHOLFamilyTrees::LifelogCache::Servers.new(cache).each do |logs|
+      p logs.server
+      load_server(logs)
+    end
+  end
+
+  def self.fetch
+    OHOLFamilyTrees::LifelogServer::Servers.new.each do |logs|
       p logs.server
       load_server(logs)
     end
