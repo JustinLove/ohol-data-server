@@ -48,57 +48,103 @@ module Import
 
     epoch = Life.where(:server_id => serverid).where('birth_time < ?', Time.at(lives.lives.values.first.time)).maximum(:epoch) || 0
 
+    births = []
+    deaths = []
+    both = []
+
     lives.each do |life|
       if life.playerid == 2
         epoch += 1
       end
-      key = key_fields(serverid, epoch, life.playerid)
-      fields = {}
-      if life.birth_time
-        fields.merge!(birth_fields(life))
+      record = [serverid, epoch, life.playerid] + common_data(life)
+      if life.birth_time && life.death_time
+        record += birth_data(life) + death_data(life)
+        both << record
+      elsif life.birth_time
+        record += birth_data(life)
+        births << record
+      elsif life.death_time
+        record += death_data(life)
+        deaths << record
       end
-      if life.death_time
-        fields.merge!(death_fields(life))
-      end
-      #p key
-      #p fields
-      Life.find_or_initialize_by(key).update(fields)
     end
+
+    p "deaths: #{deaths.length}"
+    Life.import (key_columns + common_columns + death_columns),
+      deaths,
+      :on_duplicate_key_update => {
+        :conflict_target => key_columns,
+        :columns => death_columns,
+      }
+    p "both: #{both.length}"
+    Life.import (key_columns + common_columns + birth_columns + death_columns),
+      both, :batch_size => 1000,
+      :on_duplicate_key_update => {
+        :conflict_target => key_columns,
+        :columns => death_columns,
+      }
+    p "births: #{births.length}"
+    Life.import (key_columns + common_columns + birth_columns),
+      births,
+      :on_duplicate_key_ignore => true
   end
 
-  def self.key_fields(serverid, epoch, playerid)
-    return {
-      :server_id => serverid,
-      :epoch => epoch,
-      :playerid => playerid,
-    }
+  def self.key_columns
+    [:server_id, :epoch, :playerid]
   end
 
-  def self.birth_fields(life)
-    return {
-      :account_hash => life.hash,
-      :birth_time => Time.at(life.birth_time),
-      :birth_x => life.birth_coords && life.birth_coords[0],
-      :birth_y => life.birth_coords && life.birth_coords[1],
-      :birth_population => life.birth_population,
-      :parent => life.parentid == OHOLFamilyTrees::Lifelog::NoParent ? -1 : life.parentid,
-      :chain => life.chain,
-      :gender => life.gender,
-    }
+  def self.common_columns
+    [:account_hash, :gender]
   end
 
-  def self.death_fields(life)
-    return {
-      :account_hash => life.hash,
-      :death_time => Time.at(life.death_time),
-      :death_x => life.death_coords && life.death_coords[0],
-      :death_y => life.death_coords && life.death_coords[1],
-      :death_population => life.death_population,
-      :gender => life.gender,
-      :age => life.age,
-      :cause => life.cause,
-      :killer => life.killer,
-    }
+  def self.common_data(life)
+    [life.hash, life.gender]
+  end
+
+  def self.birth_columns
+    [
+      :birth_time,
+      :birth_x,
+      :birth_y,
+      :birth_population,
+      :parent,
+      :chain,
+    ]
+  end
+
+  def self.birth_data(life)
+    [
+      Time.at(life.birth_time),
+      life.birth_coords && life.birth_coords[0],
+      life.birth_coords && life.birth_coords[1],
+      life.birth_population,
+      life.parentid == OHOLFamilyTrees::Lifelog::NoParent ? -1 : life.parentid,
+      life.chain,
+    ]
+  end
+
+  def self.death_columns
+    [
+      :death_time,
+      :death_x,
+      :death_y,
+      :death_population,
+      :age,
+      :cause,
+      :killer,
+    ]
+  end
+
+  def self.death_data(life)
+    [
+      Time.at(life.death_time),
+      life.death_coords && life.death_coords[0],
+      life.death_coords && life.death_coords[1],
+      life.death_population,
+      life.age,
+      life.cause,
+      life.killer,
+    ]
   end
 
   def self.load_names(path)
