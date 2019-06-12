@@ -1,31 +1,29 @@
 require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
+require 'ohol-family-trees/lifelog_cache'
 
 module Import
   def self.load_cache(cache)
-    Dir.foreach(cache) do |dir|
-      next unless dir.match("lifeLog_")
-      p dir
-      load_dir(dir, cache)
+    OHOLFamilyTrees::LifelogCache::Servers.new(cache).each do |logs|
+      p logs.server
+      load_server(logs)
     end
   end
 
-  def self.load_dir(dir, cache)
-    OHOLFamilyTrees::History.new.load_dir(File.join(cache, dir)) do |path|
-      file_path = File.join(cache, dir, path)
-      cache_path = File.join(dir, path)
+  def self.load_server(logs)
+    logs.each do |logfile|
+      cache_path = logfile.path
       #p cache_path
-      file_date = File.mtime(file_path)
       fetched_at = Time.now
       lifelog = LifelogFile.find_by_path(cache_path)
-      #p [file_date, lifelog.fetched_at, file_date > lifelog.fetched_at]
-      next if lifelog && file_date < lifelog.fetched_at
+      #p [logfile.date, lifelog.fetched_at, logfile.date > lifelog.fetched_at]
+      next if lifelog && logfile.date < lifelog.fetched_at
 
       p "importing #{cache_path}"
-      if path.match('_names.txt')
-        load_names(file_path)
+      if logfile.names?
+        load_names(logfile)
       else
-        load_log(file_path)
+        load_log(logfile)
       end
 
       if lifelog
@@ -36,13 +34,13 @@ module Import
     end
   end
 
-  def self.load_log(path)
-    server = path.match(/lifeLog_(.*)\//)[1]
+  def self.load_log(logfile)
+    server = logfile.server
     serverid = Server.find_by_server_name(server).id
     raise "server not found" if serverid.nil?
 
     lives = OHOLFamilyTrees::History.new
-    lives.load_log(path)
+    lives.load_log(logfile)
 
     return unless lives.length > 0
 
@@ -147,12 +145,12 @@ module Import
     ]
   end
 
-  def self.load_names(path)
-    server = path.match(/lifeLog_(.*)\//)[1]
+  def self.load_names(logfile)
+    server = logfile.server
     serverid = Server.find_by_server_name(server).id
     raise "server not found" if serverid.nil?
 
-    file = File.open(path, "r", :external_encoding => 'ASCII-8BIT')
+    file = logfile.open
 
     namelogs = []
 
