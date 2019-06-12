@@ -154,10 +154,37 @@ module Import
 
     file = File.open(path, "r", :external_encoding => 'ASCII-8BIT')
 
-    while namelog = OHOLFamilyTrees::Namelog.next_log(file)
-      Life.where(:server_id => serverid, :playerid => namelog.playerid)
-        .order("epoch desc").limit(1)
-        .update(:name => namelog.name)
+    namelogs = []
+
+    while log = OHOLFamilyTrees::Namelog.next_log(file)
+      namelogs << log
+    end
+
+    if namelogs.first.playerid < namelogs.last.playerid
+      epoch = 0
+      namelogs.find do |namelog|
+        epochs = Life.where(:server_id => serverid, :playerid => namelog.playerid)
+          .order("epoch desc").limit(1).pluck(:epoch)
+        if epochs.any?
+          epoch = epochs.first
+          true
+        end
+      end
+      names = namelogs.map {|namelog| [serverid, epoch, namelog.playerid, 'nameonly', namelog.name]}
+      p "names: #{names.length}"
+      Life.import (key_columns + [:account_hash, :name]),
+        names,
+        :on_duplicate_key_update => {
+          :conflict_target => key_columns,
+          :columns => [:name],
+        }
+      Life.where(:account_hash => 'nameonly').delete_all
+    else
+      namelogs.each do |namelog|
+        Life.where(:server_id => serverid, :playerid => namelog.playerid)
+          .order("epoch desc").limit(1)
+          .update(:name => namelog.name)
+      end
     end
   end
 end
