@@ -1,11 +1,11 @@
+require 'ohol-family-trees/graph'
+
 class FamilyTreesController < ApplicationController
   def index
     p life_params
     life = Life.find_by!(life_params)
-    p 'v' * 20
-    p life.family.map(&:nil?)
-    p '^' * 20
-    render :json => PointPresenter.wrap(life.family)
+    nodes = GraphPresenter.wrap(life.family)
+    render :html => OHOLFamilyTrees::Graph.html(nil, nodes).html_safe
   end
 
   private

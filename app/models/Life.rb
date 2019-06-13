@@ -21,7 +21,11 @@ class Life < ApplicationRecord
   end
 
   def children
-    id_scope.where(:parent => playerid)
+    if female?
+      id_scope.where(:parent => playerid)
+    else
+      []
+    end
   end
 
   def family
