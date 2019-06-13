@@ -166,7 +166,7 @@ module Import
       namelogs << log
     end
 
-    if namelogs.first.playerid < namelogs.last.playerid
+    if namelogs.any? && namelogs.first.playerid < namelogs.last.playerid
       epoch = 0
       namelogs.find do |namelog|
         epochs = Life.where(:server_id => serverid, :playerid => namelog.playerid)
