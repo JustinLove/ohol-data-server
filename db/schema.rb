@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_165649) do
+ActiveRecord::Schema.define(version: 2019_06_14_172801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,9 +43,12 @@ ActiveRecord::Schema.define(version: 2019_06_14_165649) do
     t.string "name"
     t.integer "lineage"
     t.index ["account_hash"], name: "index_lives_on_account_hash"
+    t.index ["birth_time"], name: "index_lives_on_birth_time"
+    t.index ["death_time"], name: "index_lives_on_death_time"
     t.index ["server_id", "epoch", "lineage"], name: "index_lives_on_server_id_and_epoch_and_lineage"
     t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
     t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid", unique: true
+    t.index ["server_id"], name: "index_lives_on_server_id"
   end
 
   create_table "monuments", force: :cascade do |t|

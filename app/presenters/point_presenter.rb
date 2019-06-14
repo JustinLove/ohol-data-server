@@ -7,7 +7,7 @@ class PointPresenter < SimpleDelegator
       birth_y,
       birth_time.to_i,
       chain,
-      0,
+      lineage,
     ]
   end
 
