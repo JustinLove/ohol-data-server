@@ -29,7 +29,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'rack-cors'
 
 gem 'activerecord-import'
+gem 'database_specification'
 gem 'ohol-family-trees', :path => '../ohol-family-trees'
+gem 'sequel'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

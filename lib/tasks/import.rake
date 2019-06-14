@@ -24,9 +24,8 @@ namespace :import do
     p 'after', Life.count
   end
 
-  task :killfix => :environment do
-    Life.where('cause LIKE ?', 'killer_%').each do |life|
-      life.update(:killer => life.cause.sub('killer_', '').to_i)
-    end
+  task :lineage => :environment do
+    require 'import'
+    Import.set_lineage
   end
 end

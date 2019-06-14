@@ -9,6 +9,7 @@ module Import
       p logs.server
       load_server(logs)
     end
+    set_lineage
   end
 
   def self.fetch
@@ -16,6 +17,37 @@ module Import
       p logs.server
       load_server(logs)
     end
+    set_lineage
+  end
+
+  def self.set_lineage
+    untagged = DB[:lives].where(:lineage => nil).count
+    p "before: #{untagged} lives missing lineage"
+
+    updated = DB[:lives]
+      .where(:lineage => nil, :chain => 1)
+      .update(:lineage => :playerid)
+    p "updated #{updated} chain 1"
+
+    max_chain = DB[:lives].max(:chain)
+    c = Sequel[:c]
+    p = Sequel[:p]
+
+    (2..max_chain).each do |chain|
+      updated = DB.from(Sequel.as(:lives, :c), Sequel.as(:lives, :p))
+        .where(
+          c[:lineage] => nil,
+          c[:chain] => chain,
+          p[:chain] => chain-1,
+          p[:server_id] => c[:server_id],
+          p[:epoch] => c[:epoch],
+          p[:playerid] => c[:parent]
+        ).update(:lineage => p[:lineage])
+      p "updated #{updated} chain #{chain}"
+    end
+
+    untagged = DB[:lives].where(:lineage => nil).count
+    p "after: #{untagged} lives missing lineage"
   end
 
   def self.load_server(logs)
