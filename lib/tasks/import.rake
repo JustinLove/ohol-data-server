@@ -1,31 +1,31 @@
 namespace :import do
   task :test => :environment do
-    require 'import'
+    require 'import/lives'
     p 'before', Life.count
 
     cache = "../ohol-family-trees/cache/"
-    Import.load_cache(cache)
+    Import::Lives.load_cache(cache)
 
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday.txt"
-    #Import.load_log(path)
+    #Import::Lives.load_log(path)
 
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday_names.txt"
-    #Import.load_names(path)
+    #Import::Lives.load_names(path)
 
     p 'after', Life.count
   end
 
   task :update => :environment do
-    require 'import'
+    require 'import/lives'
     p 'before', Life.count
 
-    Import.fetch
+    Import::Lives.fetch
 
     p 'after', Life.count
   end
 
   task :lineage => :environment do
-    require 'import'
-    Import.set_lineage
+    require 'import/lives'
+    Import::Lives.set_lineage
   end
 end
