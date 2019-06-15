@@ -1,13 +1,17 @@
-require 'delegate'
+class PointPresenter
+  def initialize(props)
+    @props = props
+  end
 
-class PointPresenter < SimpleDelegator
+  attr_reader :props
+
   def as_json
     [
-      birth_x,
-      birth_y,
-      birth_time.to_i,
-      chain,
-      lineage,
+      props[:birth_x],
+      props[:birth_y],
+      props[:birth_time].to_i,
+      props[:chain],
+      props[:lineage],
     ]
   end
 
