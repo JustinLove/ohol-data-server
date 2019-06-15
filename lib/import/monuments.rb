@@ -5,6 +5,10 @@ require 'ohol-family-trees/monument_server'
 module Import
   module Monuments
     def self.load_cache(cache)
+      count = OHOLFamilyTrees::MonumentCache.monument_count(cache)
+      known = DB[:monuments].count
+      p "#{count} monuments now, #{known} in db"
+      return if count && count <= known
       OHOLFamilyTrees::MonumentCache::Servers.new(cache).each do |logfile|
         p logfile.server
         load_log(logfile)
@@ -12,6 +16,10 @@ module Import
     end
 
     def self.fetch
+      count = OHOLFamilyTrees::MonumentServer.monument_count
+      known = DB[:monuments].count
+      p "#{count} monuments now, #{known} in db"
+      return if count && count <= known
       OHOLFamilyTrees::MonumentServer::Servers.new.each do |logfile|
         p logfile.server
         load_log(logfile)
@@ -22,7 +30,7 @@ module Import
       p "importing #{logfile.path}"
 
       server = logfile.server
-      server_id = Server.find_by_server_name(server).id
+      server_id = Server.where(:server_name => server).pluck(:id).first
       raise "server not found" if server_id.nil?
 
       monuments = OHOLFamilyTrees::Monument.load_log(logfile)
