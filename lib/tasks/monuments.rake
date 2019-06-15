@@ -8,4 +8,13 @@ namespace :monuments do
 
     p 'after', DB[:monuments].count
   end
+
+  task :update => :environment do
+    require 'import/monuments'
+    p 'before', DB[:monuments].count
+
+    Import::Monuments.fetch
+
+    p 'after', DB[:monuments].count
+  end
 end

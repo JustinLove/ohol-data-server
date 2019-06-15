@@ -1,11 +1,9 @@
 require 'ohol-family-trees/monument'
 require 'ohol-family-trees/monument_cache'
+require 'ohol-family-trees/monument_server'
 
 module Import
   module Monuments
-    class Monument < ApplicationRecord
-    end
-
     def self.load_cache(cache)
       OHOLFamilyTrees::MonumentCache::Servers.new(cache).each do |logfile|
         p logfile.server
@@ -13,15 +11,15 @@ module Import
       end
     end
 
-    def self.load_log(logfile)
-      cache_path = logfile.path
-      #p cache_path
-      fetched_at = Time.now
-      lifelog = LifelogFile.find_by_path(cache_path)
-      #p [logfile.date, lifelog.fetched_at, logfile.date > lifelog.fetched_at]
-      return if lifelog && logfile.date < lifelog.fetched_at
+    def self.fetch
+      OHOLFamilyTrees::MonumentServer::Servers.new.each do |logfile|
+        p logfile.server
+        load_log(logfile)
+      end
+    end
 
-      p "importing #{cache_path}"
+    def self.load_log(logfile)
+      p "importing #{logfile.path}"
 
       server = logfile.server
       server_id = Server.find_by_server_name(server).id
@@ -30,19 +28,16 @@ module Import
       monuments = OHOLFamilyTrees::Monument.load_log(logfile)
       #p monuments
 
-      records = []
       monuments.each do |monument|
-        records << [server_id, monument.date, monument.x, monument.y]
-      end
+        fields = {
+          :server_id => server_id,
+          :date => monument.date,
+          :x => monument.x,
+          :y => monument.y,
+        }
+        next if DB[:monuments].select(1).where(fields).any?
 
-      Monument.import [:server_id, :date, :x, :y],
-        records,
-        :on_duplicate_key_ignore => true
-
-      if lifelog
-        lifelog.update(:fetched_at => fetched_at)
-      else
-        LifelogFile.create(:path => cache_path, :fetched_at => fetched_at)
+        DB[:monuments].insert(fields)
       end
     end
   end
