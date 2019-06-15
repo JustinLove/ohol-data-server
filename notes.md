@@ -1,0 +1,5 @@
+- treat rest as own lineage?
+- error reporting
+- web api design
+- protocol buffers (or something like that)
+- Frontend application
