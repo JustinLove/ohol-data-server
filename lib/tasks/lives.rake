@@ -1,4 +1,4 @@
-namespace :import do
+namespace :lives do
   task :test => :environment do
     require 'import/lives'
     p 'before', Life.count
