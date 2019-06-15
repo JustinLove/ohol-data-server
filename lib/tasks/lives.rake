@@ -6,8 +6,9 @@ namespace :lives do
     cache = "../ohol-family-trees/cache/"
     Import::Lives.load_cache(cache)
 
-    #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday.txt"
-    #Import::Lives.load_log(path)
+    #path = "lifeLog_bigserver2.onehouronelife.com/2019_02February_20_Wednesday.txt"
+    #logfile = OHOLFamilyTrees::LifelogCache::Logfile.new(path, cache)
+    #Import::Lives.load_log(logfile)
 
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday_names.txt"
     #Import::Lives.load_names(path)
