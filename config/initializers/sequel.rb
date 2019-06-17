@@ -1,5 +1,7 @@
 require 'database_specification'
 
+# also initializers/time_zone
+
 DB = if ENV['DATABASE_URL']
   Sequel.connect ENV['DATABASE_URL']
 else

@@ -1,6 +1,9 @@
 class MonumentsController < ApplicationController
   def index
-    lives = MonumentSearch.new(params).monuments.select(*MonumentPresenter.fields).all
-    render :json => MonumentPresenter.wrap(lives)
+    query = MonumentSearch.new(params).monuments
+    monuments = query.select(*MonumentPresenter.fields).all
+    if stale? :last_modified => monuments.map {|m| m[:date]}.max, :public => true
+      render :json => MonumentPresenter.wrap(monuments)
+    end
   end
 end
