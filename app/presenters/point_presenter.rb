@@ -9,9 +9,19 @@ class PointPresenter
     [
       props[:birth_x],
       props[:birth_y],
-      props[:birth_time].to_i,
+      props[:birth_time]&.to_i,
       props[:chain],
       props[:lineage],
+    ]
+  end
+
+  def self.fields
+    [
+      :birth_x,
+      :birth_y,
+      :birth_time,
+      :chain,
+      :lineage,
     ]
   end
 

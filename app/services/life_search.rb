@@ -20,12 +20,14 @@ class LifeSearch
     if params[:period]
       @period = ISO8601::Duration.new(params[:period])
     end
+    @limit = params[:limit]&.to_i || 20000
   end
 
   attr_reader :server_id
   attr_reader :epoch
   attr_reader :playerid
   attr_reader :period
+  attr_reader :limit
 
   def lives
     match = {
@@ -35,13 +37,14 @@ class LifeSearch
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
-      .order(Sequel.desc(:birth_time)).limit(100000)
+      .where(Sequel.~(:birth_time => nil))
+      .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
     if period
       result = result
-        .where(Sequel.~(:birth_time => nil))
         .where(Sequel[:birth_time] > Time.now - period.to_seconds)
+        #.where(Sequel.~(:birth_time => nil))
     end
-    result.all
+    result
   end
 end
