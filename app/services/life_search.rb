@@ -41,8 +41,9 @@ class LifeSearch
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
     if period
+      last = DB[:lives].max(:birth_time)
       result = result
-        .where(Sequel[:birth_time] > Time.now - period.to_seconds)
+        .where(Sequel[:birth_time] > last - period.to_seconds)
         #.where(Sequel.~(:birth_time => nil))
     end
     result
