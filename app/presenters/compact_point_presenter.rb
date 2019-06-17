@@ -1,4 +1,4 @@
-class PointPresenter
+class CompactPointPresenter
   def initialize(props)
     @props = props
   end
@@ -6,13 +6,13 @@ class PointPresenter
   attr_reader :props
 
   def as_json
-    {
-      :birth_x => props[:birth_x],
-      :birth_y => props[:birth_y],
-      :birth_time => props[:birth_time]&.to_i,
-      :chain => props[:chain],
-      :lineage => props[:lineage],
-    }
+    [
+      props[:birth_x],
+      props[:birth_y],
+      props[:birth_time]&.to_i,
+      props[:chain],
+      props[:lineage],
+    ]
   end
 
   def self.fields
