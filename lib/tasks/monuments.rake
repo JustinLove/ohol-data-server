@@ -17,4 +17,14 @@ namespace :monuments do
 
     p 'after', DB[:monuments].count
   end
+
+  task :reset => :environment do
+    require 'import/monuments'
+
+    DB[:monuments].delete
+
+    Import::Monuments.fetch
+
+    p 'after', DB[:monuments].count
+  end
 end

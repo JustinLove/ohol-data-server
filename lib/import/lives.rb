@@ -93,6 +93,8 @@ module Import
 
       epoch = Life.where(:server_id => serverid).where('birth_time < ?', Time.at(lives.lives.values.first.time)).maximum(:epoch) || 0
 
+      p "initial epoch #{epoch}"
+
       births = []
       deaths = []
       both = []
@@ -100,6 +102,7 @@ module Import
       lives.each do |life|
         if life.playerid == 2
           epoch += 1
+          p "epoch advanced #{epoch}"
         end
         record = [serverid, epoch, life.playerid] + common_data(life)
         if life.birth_time && life.death_time

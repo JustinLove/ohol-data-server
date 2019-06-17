@@ -1,5 +1,5 @@
-- treat rest as own lineage?
-- error reporting
 - web api design
-- protocol buffers (or something like that)
+- error reporting
 - Frontend application
+- protocol buffers (or something like that)
+- treat rest as own lineage?
