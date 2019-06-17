@@ -1,5 +1,4 @@
 - web api design
-- error reporting
 - unknown and not found parameters
 - Frontend application
 - protocol buffers (or something like that)

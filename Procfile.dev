@@ -1,0 +1,1 @@
+lives_test: bundle exec rails lives:test

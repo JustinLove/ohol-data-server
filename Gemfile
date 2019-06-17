@@ -33,6 +33,7 @@ gem 'database_specification'
 gem 'iso8601'
 #gem 'ohol-family-trees', :path => '../ohol-family-trees'
 gem 'ohol-family-trees', :github => 'JustinLove/ohol-family-trees', :branch => 'master'
+gem 'sentry-raven'
 gem 'sequel'
 
 group :development, :test do

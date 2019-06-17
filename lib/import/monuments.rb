@@ -11,6 +11,7 @@ module Import
       return if count && count <= known
       OHOLFamilyTrees::MonumentCache::Servers.new(cache).each do |logfile|
         p logfile.server
+        Raven.extra_context(:logfile => logfile.server)
         load_log(logfile)
       end
     end
@@ -22,6 +23,7 @@ module Import
       return if count && count <= known
       OHOLFamilyTrees::MonumentServer::Servers.new.each do |logfile|
         p logfile.server
+        Raven.extra_context(:logfile => logfile.server)
         load_log(logfile)
       end
     end

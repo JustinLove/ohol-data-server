@@ -8,6 +8,7 @@ module Import
     def self.load_cache(cache)
       OHOLFamilyTrees::LifelogCache::Servers.new(cache).each do |logs|
         p logs.server
+        Raven.extra_context(:import_server => logs.server)
         load_server(logs)
       end
       set_lineage
@@ -16,6 +17,7 @@ module Import
     def self.fetch
       OHOLFamilyTrees::LifelogServer::Servers.new.each do |logs|
         p logs.server
+        Raven.extra_context(:import_server => logs.server)
         load_server(logs)
       end
       set_lineage
@@ -60,6 +62,7 @@ module Import
     def self.load_server(logs)
       logs.each do |logfile|
         cache_path = logfile.path
+        Raven.extra_context(:logfile => cache_path)
         #p cache_path
         fetched_at = Time.now
         lifelog = LifelogFile.find_by_path(cache_path)
