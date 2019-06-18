@@ -2,8 +2,6 @@ require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 require 'ohol-family-trees/lifelog_cache'
 require 'ohol-family-trees/lifelog_server'
-require './app/models/life' # weirdness in heroku rakes tasks
-require './app/models/lifelog_file' # weirdness in heroku rakes tasks
 
 module Import
   module Lives
