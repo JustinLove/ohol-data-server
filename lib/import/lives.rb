@@ -86,7 +86,8 @@ module Import
 
     def self.load_log(logfile)
       server = logfile.server
-      serverid = DB[:servers].where(:server_name => server).limit(1).pluck(:server_id)
+      serverid = DB[:servers].where(:server_name => server)
+        .limit(1).pluck(:server_id).first
       raise "server not found" if serverid.nil?
 
       lives = OHOLFamilyTrees::History.new
