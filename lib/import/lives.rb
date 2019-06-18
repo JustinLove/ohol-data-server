@@ -2,6 +2,8 @@ require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 require 'ohol-family-trees/lifelog_cache'
 require 'ohol-family-trees/lifelog_server'
+require './app/models/life' # weirdness in heroku rakes tasks
+require './app/models/lifelog_file' # weirdness in heroku rakes tasks
 
 module Import
   module Lives
@@ -86,7 +88,7 @@ module Import
 
     def self.load_log(logfile)
       server = logfile.server
-      serverid = Server.find_by_server_name(server).id
+      serverid = DB[:servers].where(:server_name => server).limit(1).pluck(:server_id)
       raise "server not found" if serverid.nil?
 
       lives = OHOLFamilyTrees::History.new

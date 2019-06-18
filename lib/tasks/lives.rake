@@ -1,7 +1,7 @@
 namespace :lives do
   task :test => :environment do
     require 'import/lives'
-    p 'before', Life.count
+    p 'before', DB[:lives].count
 
     cache = "../ohol-family-trees/cache/"
     Import::Lives.load_cache(cache)
@@ -13,16 +13,16 @@ namespace :lives do
     #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday_names.txt"
     #Import::Lives.load_names(path)
 
-    p 'after', Life.count
+    p 'after', DB[:lives].count
   end
 
   task :update => :environment do
     require 'import/lives'
-    p 'before', Life.count
+    p 'before', DB[:lives].count
 
     Import::Lives.fetch
 
-    p 'after', Life.count
+    p 'after', DB[:lives].count
   end
 
   task :lineage => :environment do

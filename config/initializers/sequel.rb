@@ -5,6 +5,10 @@ module DB
     db[table]
   end
 
+  def self.from(*args)
+    db.from(*args)
+  end
+
   def self.db
     @@db ||= create_db
   end
