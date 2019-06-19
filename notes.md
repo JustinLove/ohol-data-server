@@ -3,7 +3,5 @@
 - Frontend application
 - protocol buffers (or something like that)
 - common query caching
-  - cache headers?
   - request cache?
   - upload static files?
-- treat rest as own lineage?
