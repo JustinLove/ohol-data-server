@@ -37,11 +37,11 @@ module Import
         .update(:lineage => :parent)
       p "updated #{updated} chain 2"
 
-      max_chain = DB[:lives].max(:chain)
+      chains = DB[:lives].where(:lineage => nil).where(Sequel[:chain] > 2).distinct.select(:chain).pluck(:chain)
       c = Sequel[:c]
       p = Sequel[:p]
 
-      (3..max_chain).each do |chain|
+      chains.each do |chain|
         updated = DB.from(Sequel.as(:lives, :c), Sequel.as(:lives, :p))
           .where(
             c[:lineage] => nil,
@@ -52,7 +52,6 @@ module Import
             p[:playerid] => c[:parent]
           ).update(:lineage => p[:lineage])
         p "updated #{updated} chain #{chain}"
-        break if updated == 0
       end
 
       untagged = DB[:lives].where(:lineage => nil).count
