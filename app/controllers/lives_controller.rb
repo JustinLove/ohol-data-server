@@ -10,8 +10,7 @@ class LivesController < ApplicationController
     end
 
     if stale
-      lives = query.select(*PointPresenter.fields).all
-      render :json => PointPresenter.wrap(lives)
+      render :json => PointPresenter.response(query)
     end
   end
 end

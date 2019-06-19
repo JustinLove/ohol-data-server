@@ -28,4 +28,12 @@ class PointPresenter
   def self.wrap(lives)
     lives.map {|life| new(life).as_json}
   end
+
+  def self.response(query)
+    lives = query.select(*PointPresenter.fields).all
+    {
+      :data => PointPresenter.wrap(lives),
+      :total => query.unlimited.count,
+    }
+  end
 end
