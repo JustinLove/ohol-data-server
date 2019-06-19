@@ -29,4 +29,9 @@ namespace :lives do
     require 'import/lives'
     Import::Lives.set_lineage
   end
+
+  task :patch_lineage => :environment do
+    require 'import/lives'
+    Import::Lives.patch_lineage
+  end
 end

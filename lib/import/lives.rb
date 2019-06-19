@@ -50,12 +50,33 @@ module Import
             p[:server_id] => c[:server_id],
             p[:epoch] => c[:epoch],
             p[:playerid] => c[:parent]
-          ).update(:lineage => p[:lineage])
+          )
+          .where(Sequel.~(p[:lineage] => nil))
+          .update(:lineage => p[:lineage])
         p "updated #{updated} chain #{chain}"
       end
 
       untagged = DB[:lives].where(:lineage => nil).count
       p "after: #{untagged} lives missing lineage"
+    end
+
+    def self.patch_lineage
+      set_lineage
+
+      loop do
+        chains = DB[:lives].where(:lineage => nil).where(Sequel[:chain] > 2).distinct.select(:chain).pluck(:chain)
+
+        return unless chains.any?
+
+        chain = chains.first
+
+        updated = DB[:lives]
+          .where(:lineage => nil, :chain => chain)
+          .update(:lineage => :parent)
+        p "updated #{updated} chain #{chain}"
+
+        set_lineage
+      end
     end
 
     def self.load_server(logs)
