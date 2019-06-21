@@ -2,6 +2,7 @@ class LifeSearch
   def initialize(params)
     @epoch = params[:epoch]&.to_i
     @playerid = params[:playerid]&.to_i
+    @query = params[:q]
     if params[:server_id]
       @server_id = params[:server_id].to_i
     else
@@ -26,6 +27,7 @@ class LifeSearch
   attr_reader :server_id
   attr_reader :epoch
   attr_reader :playerid
+  attr_reader :query
   attr_reader :period
   attr_reader :limit
 
@@ -34,6 +36,7 @@ class LifeSearch
       :server_id => server_id,
       :epoch => epoch,
       :playerid => playerid,
+      :name => query
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
