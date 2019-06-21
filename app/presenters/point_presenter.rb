@@ -12,6 +12,11 @@ class PointPresenter
       :birth_time => props[:birth_time]&.to_i,
       :chain => props[:chain],
       :lineage => props[:lineage],
+      :name => props[:name],
+      :server_id => props[:server_id],
+      :epoch => props[:epoch],
+      :playerid => props[:playerid],
+      :age => props[:age],
     }
   end
 
@@ -22,6 +27,11 @@ class PointPresenter
       :birth_time,
       :chain,
       :lineage,
+      :name,
+      :server_id,
+      :epoch,
+      :playerid,
+      :age,
     ]
   end
 
