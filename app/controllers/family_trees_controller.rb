@@ -2,10 +2,16 @@ require 'ohol-family-trees/graph'
 
 class FamilyTreesController < ApplicationController
   def index
-    p life_params
-    life = Life.find_by!(life_params)
-    nodes = GraphPresenter.wrap(life.family)
-    render :html => OHOLFamilyTrees::Graph.html(nil, nodes).html_safe
+    lineage = DB[:lives]
+      .where(:server_id => params[:server_id], :epoch => params[:epoch], :playerid => params[:playerid])
+      .limit(1).pluck(:lineage).first
+    family = DB[:lives]
+      .where(:server_id => params[:server_id], :epoch => params[:epoch], :lineage => lineage)
+      .order(:birth_time).all
+    nodes = GraphPresenter.wrap(family)
+    #render :html => OHOLFamilyTrees::Graph.html(nil, nodes).html_safe
+
+    render :plain => OHOLFamilyTrees::Graph.graph(nodes).output(:dot => String)
   end
 
   private

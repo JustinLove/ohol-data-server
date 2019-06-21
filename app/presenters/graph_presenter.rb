@@ -1,26 +1,39 @@
-require 'delegate'
 require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 
-class GraphPresenter < SimpleDelegator
+class GraphPresenter
+  def initialize(props)
+    @props = props
+  end
+
+  attr_reader :props
+
   def key
-    playerid.to_s
+    props[:playerid].to_s
   end
 
   def parent
-    if super == -1
+    if props[:parent] == -1
       OHOLFamilyTrees::Lifelog::NoParent
-    elsif super
-      super.to_s
+    elsif props[:parent]
+      props[:parent].to_s
     end
   end
 
   def killer
-    super && super.to_s
+    props[:killer] && props[:killer].to_s
+  end
+
+  def cause
+    props[:cause]
+  end
+
+  def age
+    props[:age]
   end
 
   def name
-    super || ('p' + playerid.to_s)
+    props[:name] || ('p' + props[:playerid].to_s)
   end
 
   def highlight
@@ -32,23 +45,17 @@ class GraphPresenter < SimpleDelegator
   end
 
   def hash
-    account_hash
+    props[:account_hash]
   end
 
   def gender
-    if male?
-      'M'
-    elsif female?
-      'F'
-    else
-      super
-    end
+    props[:gender]
   end
 
   def self.wrap(lives)
     wrapped = OHOLFamilyTrees::History.new
     lives.each do |life|
-      wrapped[life.playerid.to_s] = new(life)
+      wrapped[life[:playerid].to_s] = new(life)
     end
     wrapped
   end
