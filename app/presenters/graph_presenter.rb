@@ -8,6 +8,19 @@ class GraphPresenter
 
   attr_reader :props
 
+  def self.fields
+    [
+      :playerid,
+      :parent,
+      :cause,
+      :killer,
+      :age,
+      :name,
+      :account_hash,
+      :gender,
+    ]
+  end
+
   def key
     props[:playerid].to_s
   end
@@ -58,5 +71,11 @@ class GraphPresenter
       wrapped[life[:playerid].to_s] = new(life)
     end
     wrapped
+  end
+
+  def self.response(query)
+    results = query.select(*fields).all
+    wrap(results)
+    OHOLFamilyTrees::Graph.graph(wrap(results)).output(:dot => String)
   end
 end
