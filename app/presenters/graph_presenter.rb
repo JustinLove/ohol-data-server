@@ -78,4 +78,10 @@ class GraphPresenter
     wrap(results)
     OHOLFamilyTrees::Graph.graph(wrap(results)).output(:dot => String)
   end
+
+  def self.html(query)
+    results = query.select(*fields).all
+    wrap(results)
+    OHOLFamilyTrees::Graph.html(nil, wrap(results))
+  end
 end

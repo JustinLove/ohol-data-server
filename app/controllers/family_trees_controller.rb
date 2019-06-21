@@ -8,7 +8,7 @@ class FamilyTreesController < ApplicationController
     family = DB[:lives]
       .where(:server_id => params[:server_id], :epoch => params[:epoch], :lineage => lineage)
       .order(:birth_time)
-    #render :html => OHOLFamilyTrees::Graph.html(nil, nodes).html_safe
+    #render :html => GraphPresenter.html(family).html_safe
 
     render :plain => GraphPresenter.response(family)
   end
