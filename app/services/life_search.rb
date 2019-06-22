@@ -36,13 +36,16 @@ class LifeSearch
       :server_id => server_id,
       :epoch => epoch,
       :playerid => playerid,
-      :name => query
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
       .where(Sequel.~(:birth_time => nil))
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
+    if query
+      #result = result.full_text_search([:name, :account_hash], [query.split.join(' & ')])
+      result = result.where(Sequel.ilike(:name, query + '%')).or(Sequel.like(:account_hash, query))
+    end
     if period
       last = DB[:lives].max(:birth_time)
       result = result

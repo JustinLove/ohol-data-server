@@ -43,7 +43,7 @@ class PointPresenter
     lives = query.select(*PointPresenter.fields).all
     {
       :data => PointPresenter.wrap(lives),
-      :total => query.unlimited.count,
+      #:total => query.unlimited.count, doubles query time
     }
   end
 end
