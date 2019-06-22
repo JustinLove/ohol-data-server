@@ -13,7 +13,7 @@ class FamilyTreesController < ApplicationController
       .order(:birth_time)
     #render :html => GraphPresenter.html(family).html_safe
 
-    render :plain => GraphPresenter.response(family, killers)
+    render :plain => GraphPresenter.response(family, killers, [params[:playerid]])
   end
 
   private

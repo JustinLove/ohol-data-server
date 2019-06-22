@@ -49,9 +49,7 @@ class GraphPresenter
     props[:name] || ('p' + props[:playerid].to_s)
   end
 
-  def highlight
-    false
-  end
+  attr_accessor :highlight
 
   def player_name
     nil
@@ -73,14 +71,37 @@ class GraphPresenter
     wrapped
   end
 
-  def self.response(query, killer_query = nil)
-    results = query.select(*fields).all
+  def self.response(query, killer_query = nil, highlight = [])
+    results = wrap(query.select(*fields).all)
     if killer_query
-      killers = killer_query.select(*fields).all
+      killers = wrap(killer_query.select(*fields).all)
     else
-      killers = []
+      killers = {}
     end
-    OHOLFamilyTrees::Graph.graph(wrap(results), wrap(killers)).output(:dot => String)
+    accounts = Set.new
+    highlight.each do |playerid|
+      if results.has_key?(playerid.to_s)
+        results[playerid.to_s].highlight = true
+        accounts << results[playerid.to_s].hash
+      end
+      if killers.has_key?(playerid.to_s)
+        killers[playerid.to_s].highlight = true
+        accounts << results[playerid.to_s].hash
+      end
+    end
+    accounts.each do |hash|
+      results.each do |life|
+        if life.hash == hash
+          life.highlight = true
+        end
+      end
+      killers.each do |life|
+        if life.hash == hash
+          life.highlight = true
+        end
+      end
+    end
+    OHOLFamilyTrees::Graph.graph(results, killers).output(:dot => String)
   end
 
   def self.html(query)
