@@ -34,4 +34,9 @@ namespace :lives do
     require 'import/lives'
     Import::Lives.patch_lineage
   end
+
+  task :patch_killer => :environment do
+    require 'import/lives'
+    Import::Lives.patch_killer
+  end
 end

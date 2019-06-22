@@ -79,6 +79,18 @@ module Import
       end
     end
 
+    def self.patch_killer
+      updated = DB[:lives]
+        .where(:killer => 0)
+        .where(Sequel.like(:cause, 'killer_%'))
+        .update(:killer => Sequel.lit('substring(cause from 8)::int'))
+      p "updated #{updated} with killer"
+      updated = DB[:lives]
+        .where(:killer => 0, :cause => 'hunger')
+        .update(:killer => nil)
+      p "updated #{updated} without killer"
+    end
+
     def self.load_server(logs)
       logs.each do |logfile|
         cache_path = logfile.path
@@ -215,7 +227,7 @@ module Import
         life.death_population,
         life.age,
         life.cause,
-        life.killer,
+        life.killerid,
       ]
     end
 
