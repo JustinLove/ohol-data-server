@@ -73,15 +73,18 @@ class GraphPresenter
     wrapped
   end
 
-  def self.response(query)
+  def self.response(query, killer_query = nil)
     results = query.select(*fields).all
-    wrap(results)
-    OHOLFamilyTrees::Graph.graph(wrap(results)).output(:dot => String)
+    if killer_query
+      killers = killer_query.select(*fields).all
+    else
+      killers = []
+    end
+    OHOLFamilyTrees::Graph.graph(wrap(results), wrap(killers)).output(:dot => String)
   end
 
   def self.html(query)
     results = query.select(*fields).all
-    wrap(results)
     OHOLFamilyTrees::Graph.html(nil, wrap(results))
   end
 end

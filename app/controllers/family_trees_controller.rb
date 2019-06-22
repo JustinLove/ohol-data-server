@@ -8,9 +8,12 @@ class FamilyTreesController < ApplicationController
     family = DB[:lives]
       .where(:server_id => params[:server_id], :epoch => params[:epoch], :lineage => lineage)
       .order(:birth_time)
+    killers = DB[:lives]
+      .where(:server_id => params[:server_id], :epoch => params[:epoch], :playerid => family.where(Sequel.~(:killer => nil)).select(:killer))
+      .order(:birth_time)
     #render :html => GraphPresenter.html(family).html_safe
 
-    render :plain => GraphPresenter.response(family)
+    render :plain => GraphPresenter.response(family, killers)
   end
 
   private
