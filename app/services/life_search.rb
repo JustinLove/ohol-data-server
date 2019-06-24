@@ -44,7 +44,11 @@ class LifeSearch
       .where(match)
     if query
       #result = result.full_text_search([:name, :account_hash], [query.split.join(' & ')])
-      result = result.where(Sequel.ilike(:name, query + '%')).or(Sequel.like(:account_hash, query))
+      if query.length == 40
+        result = result.where(Sequel.ilike(:account_hash, query))
+      else
+        result = result.where(Sequel.ilike(:name, query + '%'))
+      end
     end
     if period
       last = DB[:lives].max(:birth_time)
