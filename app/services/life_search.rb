@@ -46,9 +46,12 @@ class LifeSearch
       if query.length == 40
         result = result.where(:account_hash => query)
       else
-        result = result.full_text_search(
-          [:name],
-          [query.split.join(' & ') + ':*'])
+        terms = query.split
+        if terms.any?
+          result = result.full_text_search(
+            [:name],
+            [terms.join(' & ') + ':*'])
+        end
       end
     end
     if period
