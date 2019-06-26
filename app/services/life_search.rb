@@ -43,11 +43,12 @@ class LifeSearch
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
     if query
-      #result = result.full_text_search([:name, :account_hash], [query.split.join(' & ')])
       if query.length == 40
-        result = result.where(Sequel.ilike(:account_hash, query))
+        result = result.where(:account_hash => query)
       else
-        result = result.where(Sequel.ilike(:name, query + '%'))
+        result = result.full_text_search(
+          [:name],
+          [query.split.join(' & ') + ':*'])
       end
     end
     if period
