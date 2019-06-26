@@ -42,16 +42,13 @@ class LifeSearch
       .where(Sequel.~(:birth_time => nil))
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
-    if query
+    if query && !query.strip.empty?
       if query.length == 40
         result = result.where(:account_hash => query)
       else
-        terms = query.split
-        if terms.any?
-          result = result.full_text_search(
-            [:name],
-            [terms.join(' & ') + ':*'])
-        end
+        result = result
+          .where(Sequel.lit('? <% name', query))
+          .order_prepend(Sequel.desc(Sequel.function(:word_similarity, query, :name)))
       end
     end
     if period

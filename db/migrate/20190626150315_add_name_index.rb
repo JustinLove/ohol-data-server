@@ -1,5 +1,6 @@
 class AddNameIndex < ActiveRecord::Migration[5.2]
   def change
-    add_index :lives, "to_tsvector(CAST('simple' AS regconfig), (COALESCE(\"name\", '')))", name: "index_name_on_lives", using: :gin
+    enable_extension :pg_trgm
+    add_index :lives, "name gist_trgm_ops", name: "index_name_on_lives", using: :gist
   end
 end

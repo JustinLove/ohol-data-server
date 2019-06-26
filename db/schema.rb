@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 2019_06_26_150315) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "lifelog_files", force: :cascade do |t|
@@ -42,10 +43,10 @@ ActiveRecord::Schema.define(version: 2019_06_26_150315) do
     t.integer "killer"
     t.string "name"
     t.integer "lineage"
-    t.index "to_tsvector('simple'::regconfig, (COALESCE(name, ''::character varying))::text)", name: "index_name_on_lives", using: :gin
     t.index ["account_hash"], name: "index_lives_on_account_hash"
     t.index ["birth_time"], name: "index_lives_on_birth_time"
     t.index ["death_time"], name: "index_lives_on_death_time"
+    t.index ["name"], name: "index_name_on_lives", opclass: :gist_trgm_ops, using: :gist
     t.index ["server_id", "epoch", "lineage"], name: "index_lives_on_server_id_and_epoch_and_lineage"
     t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
     t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid", unique: true
