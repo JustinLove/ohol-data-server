@@ -42,7 +42,7 @@ class GraphPresenter
   end
 
   def age
-    props[:age]
+    props[:age] || 0.0
   end
 
   def name
