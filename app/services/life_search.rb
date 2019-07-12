@@ -19,6 +19,9 @@ class LifeSearch
           .limit(1).pluck(:id).first
       end
     end
+    if params[:end_time]
+      @end_time = Time.at(params[:end_time].to_i)
+    end
     if params[:period]
       @period = ISO8601::Duration.new(params[:period])
     end
@@ -30,6 +33,7 @@ class LifeSearch
   attr_reader :playerid
   attr_reader :lineage
   attr_reader :query
+  attr_reader :end_time
   attr_reader :period
   attr_reader :limit
 
@@ -54,8 +58,12 @@ class LifeSearch
           .order_prepend(Sequel.desc(Sequel.function(:word_similarity, query, :name)))
       end
     end
+    if end_time
+      result = result
+        .where(Sequel[:birth_time] <= end_time)
+    end
     if period
-      last = DB[:lives].max(:birth_time)
+      last = end_time || DB[:lives].max(:birth_time)
       result = result
         .where(Sequel[:birth_time] > last - period.to_seconds)
         #.where(Sequel.~(:birth_time => nil))
