@@ -6,25 +6,22 @@ class ServerPresenter
   attr_reader :props
 
   def as_json
-    props
-  end
-
-  def self.fields
-    [
-      :id,
-      :server_name,
-    ]
+    {
+      :id => props[:id],
+      :server_name => props[:server_name],
+      :min_time => props[:min].to_i,
+      :max_time => props[:max].to_i,
+    }
   end
 
   def self.wrap(records)
     records.map {|x| new(x).as_json}
   end
 
-  def self.response(query)
-    records = query.select(*fields).all
+  def self.response(records)
     {
       :data => wrap(records),
-      :total => query.unlimited.count,
+      #:total => query.unlimited.count,
     }
   end
 end
