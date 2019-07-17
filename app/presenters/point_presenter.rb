@@ -17,6 +17,10 @@ class PointPresenter
       :epoch => props[:epoch],
       :playerid => props[:playerid],
       :age => props[:age],
+      :death_x => props[:death_x],
+      :death_y => props[:death_y],
+      :death_time => props[:death_time]&.to_i,
+      :cause => props[:cause],
     }
   end
 
@@ -32,6 +36,10 @@ class PointPresenter
       :epoch,
       :playerid,
       :age,
+      :death_x,
+      :death_y,
+      :death_time,
+      :cause,
     ]
   end
 
