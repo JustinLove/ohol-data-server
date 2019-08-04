@@ -37,7 +37,13 @@ module Import
         .update(:lineage => :parent)
       p "updated #{updated} chain 2"
 
-      chains = DB[:lives].where(:lineage => nil).where(Sequel[:chain] > 2).distinct.select(:chain).pluck(:chain)
+      chains = DB[:lives]
+        .where(:lineage => nil)
+        .where(Sequel[:chain] > 2)
+        .distinct
+        .select(:chain)
+        .order(:chain)
+        .pluck(:chain)
       c = Sequel[:c]
       p = Sequel[:p]
 
