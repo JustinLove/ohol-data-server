@@ -21,6 +21,7 @@ namespace :arcs do
   task :reset => :environment do
     require 'import/arcs'
 
+    DB[:lifelog_files].where(Sequel.like(:path, "%mapLog.txt")).delete
     DB[:arcs].delete
 
     Import::Arcs.fetch
