@@ -57,9 +57,15 @@ module Import
           :end => Time.at(arc.s_end),
           :seed => arc.seed,
         }
-        next if DB[:arcs].select(1).where(fields).any?
-
-        DB[:arcs].insert(fields)
+        match = fields.dup
+        match.delete(:end)
+        if DB[:arcs].select(1).where(match).any?
+          p 'update'
+          DB[:arcs].where(match).update(:end => fields[:end])
+        else
+          p 'insert'
+          DB[:arcs].insert(fields)
+        end
       end
     end
   end
