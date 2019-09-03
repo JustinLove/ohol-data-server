@@ -39,6 +39,10 @@ class LineageSearch
   attr_reader :birth_time
   attr_reader :death_time
 
+  def specified?
+    server_id && epoch && lineage
+  end
+
   def example_life
     return @example_life if @example_life
     match = {
@@ -62,15 +66,15 @@ class LineageSearch
       result = result
         .where(Sequel[:birth_time] <= end_time)
     end
-    @example_life = p result.select(:lineage, :epoch).first
+    @example_life = result.select(:lineage, :epoch).first
   end
 
   def lineage
-    @lineage ||= example_life[:lineage]
+    @lineage ||= (example_life && example_life[:lineage])
   end
 
   def epoch
-    @epoch ||= example_life[:epoch]
+    @epoch ||= (example_life && example_life[:epoch])
   end
 
   def family

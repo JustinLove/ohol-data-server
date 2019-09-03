@@ -5,7 +5,11 @@ class FamilyTreesController < ApplicationController
     search = LineageSearch.new(params)
     #render :html => GraphPresenter.html(family).html_safe
 
-    render :plain => GraphPresenter.response(search.family, search.killers, [search.playerid].compact)
+    if search.specified?
+      render :plain => GraphPresenter.response(search.family, search.killers, [search.playerid].compact)
+    else
+      render :nothing => true, :status => 404
+    end
   end
 
   private
