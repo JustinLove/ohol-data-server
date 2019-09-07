@@ -6,16 +6,15 @@ require 'ohol-family-trees/lifelog_server'
 module Import
   module Lives
     def self.load_cache(cache)
-      OHOLFamilyTrees::LifelogCache::Servers.new(cache).each do |logs|
-        p logs.server
-        Raven.extra_context(:import_server => logs.server)
-        load_server(logs)
-      end
-      set_lineage
+      load_collection(OHOLFamilyTrees::LifelogCache::Servers.new(cache))
     end
 
     def self.fetch
-      OHOLFamilyTrees::LifelogServer::Servers.new.each do |logs|
+      load_collection(OHOLFamilyTrees::LifelogServer::Servers.new)
+    end
+
+    def self.load_collection(collection)
+      collection.each do |logs|
         p logs.server
         Raven.extra_context(:import_server => logs.server)
         load_server(logs)
