@@ -1,9 +1,10 @@
 GIT
   remote: https://github.com/JustinLove/ohol-family-trees.git
-  revision: f6efe8735af256753b23ba467b3fd45cfe8c1204
+  revision: fbb69dc7cd31a50df7d36e1612dd4eacffa8abb6
   branch: master
   specs:
     ohol-family-trees (0.0.0)
+      aws-sdk-s3 (~> 1)
       color
       httpclient
       nokogiri (>= 1.8.5)
@@ -58,6 +59,22 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
+    aws-eventstream (1.0.3)
+    aws-partitions (1.209.0)
+    aws-sdk-core (3.66.0)
+      aws-eventstream (~> 1.0, >= 1.0.2)
+      aws-partitions (~> 1.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.24.0)
+      aws-sdk-core (~> 3, >= 3.61.1)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.48.0)
+      aws-sdk-core (~> 3, >= 3.61.1)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.1.0)
+      aws-eventstream (~> 1.0, >= 1.0.2)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
     builder (3.2.3)
@@ -76,6 +93,7 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     iso8601 (0.12.1)
+    jmespath (1.4.0)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
