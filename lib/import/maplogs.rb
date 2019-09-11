@@ -8,8 +8,8 @@ require 'ohol-family-trees/filesystem_s3'
 
 module Import
   module Maplogs
-    PlacementPath = "kptest"
-    MaplogPath = "mltest"
+    PlacementPath = "kp"
+    MaplogPath = "ml"
 
     OutputBucket = 'wondible-com-ohol-tiles'
 
