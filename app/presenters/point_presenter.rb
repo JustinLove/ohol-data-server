@@ -21,6 +21,7 @@ class PointPresenter
       :death_y => props[:death_y],
       :death_time => props[:death_time]&.to_i,
       :cause => props[:cause],
+      :gender => props[:gender],
     }
   end
 
@@ -40,6 +41,7 @@ class PointPresenter
       :death_y,
       :death_time,
       :cause,
+      :gender,
     ]
   end
 
