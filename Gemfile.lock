@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/JustinLove/ohol-family-trees.git
-  revision: b1ed35fa250a3a85a39024d4bcf87cc524f35ee2
+  revision: 176fdf4b8f9f14ab68cbd88ff5b3371668d70dbd
   branch: master
   specs:
     ohol-family-trees (0.0.0)

@@ -55,6 +55,7 @@ module Import
         #next unless logfile.path.match('1521396640seed') # two arcs in one file
         #next unless logfile.path.match('588415882seed') # one arc with multiple start times
         #next unless logfile.path.match('2680185702seed') # multiple files one seed
+        #next unless logfile.path.match('471901928seed') # bad middle start line
 
         final_placements.process(logfile)
         maplog.process(logfile)
