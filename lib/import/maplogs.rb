@@ -3,16 +3,13 @@ require 'ohol-family-trees/maplog_server'
 require 'ohol-family-trees/object_data'
 require 'ohol-family-trees/output_final_placements'
 require 'ohol-family-trees/output_maplog'
+require 'ohol-family-trees/seed_break'
+require 'ohol-family-trees/logfile_context'
 require 'ohol-family-trees/filesystem_local'
 require 'ohol-family-trees/filesystem_s3'
 
 module Import
   module Maplogs
-    PlacementPath = "kp"
-    MaplogPath = "ml"
-
-    OutputBucket = 'wondible-com-ohol-tiles'
-
     def self.load_cache(cache, output_dir)
       filesystem = OHOLFamilyTrees::FilesystemLocal.new(output_dir)
       collection = OHOLFamilyTrees::MaplogCache::Servers.new(cache)
@@ -33,22 +30,34 @@ module Import
 
       raise "no object data" unless objects.object_size.length > 0
 
-      final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(PlacementPath, filesystem, objects)
-
-      maplog = OHOLFamilyTrees::OutputMaplog.new(MaplogPath, filesystem, objects)
-
       collection.each do |logs|
         p logs.server
         Raven.extra_context(:import_server => logs.server)
-        load_server(logs, final_placements, maplog)
+        load_server(logs, filesystem, objects)
       end
     end
 
-    def self.load_server(logs, final_placements, maplog)
+    def self.load_server(logs, filesystem, objects)
+      servercode = "17"
+      placement_path = "pl/#{servercode}"
+      maplog_path = "ml/#{servercode}"
+
+      final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(placement_path, filesystem, objects)
+
+      maplog = OHOLFamilyTrees::OutputMaplog.new(maplog_path, filesystem, objects)
+
+      manual_resets = OHOLFamilyTrees::SeedBreak.read_manual_resets(filesystem, "#{placement_path}/manual_resets.txt")
+      seeds = OHOLFamilyTrees::SeedBreak.process(logs, manual_resets)
+      seeds.save(filesystem, "#{placement_path}/seeds.json")
+
+      context = OHOLFamilyTrees::LogfileContext.new(seeds)
+
       logs.each do |logfile|
         cache_path = logfile.path
         Raven.extra_context(:logfile => cache_path)
         #p cache_path
+
+        next unless logfile.placements?
 
         #next unless logfile.path.match('000seed')
         #next unless logfile.path.match('1151446675seed') # small file
@@ -57,8 +66,16 @@ module Import
         #next unless logfile.path.match('2680185702seed') # multiple files one seed
         #next unless logfile.path.match('471901928seed') # bad middle start line
 
-        final_placements.process(logfile)
-        maplog.process(logfile)
+        context.update!(logfile)
+
+        if true
+          final_placements.process(logfile, {
+            :rootfile => context.root,
+            :basefile => context.base})
+        end
+        if true
+          maplog.process(logfile)
+        end
       end
     end
   end
