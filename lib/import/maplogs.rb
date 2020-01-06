@@ -40,7 +40,7 @@ module Import
     def self.load_server(logs, filesystem, objects)
       servercode = "17"
       placement_path = "pl/#{servercode}"
-      maplog_path = "ml/#{servercode}"
+      maplog_path = "pl/#{servercode}"
 
       final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(placement_path, filesystem, objects)
 
