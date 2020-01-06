@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/JustinLove/ohol-family-trees.git
-  revision: c973397036894357143e673a69d66fedabe49a9e
-  branch: keyframes
+  revision: 157cc2f4cef78d5cd6094f079cacb46fdf1fd342
+  branch: master
   specs:
     ohol-family-trees (0.0.0)
       aws-sdk-s3 (~> 1)
