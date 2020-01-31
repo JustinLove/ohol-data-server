@@ -1,6 +1,10 @@
 class LivesController < ApplicationController
   def index
-    query = LifeSearch.new(params).lives
+    search = LifeSearch.new(params)
+    if search.unknown_params.any?
+      return render :json => {:error => "unknown parameters", :unknown_params => search.unknown_params}, :status => 400
+    end
+    query = search.lives
 
     stale = if Rails.configuration.api_cache_headers
       expires_in(expiration_in(9, 10), :public => true)

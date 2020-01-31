@@ -5,7 +5,9 @@ class FamilyTreesController < ApplicationController
     search = LineageSearch.new(params)
     #render :html => GraphPresenter.html(family).html_safe
 
-    if search.specified?
+    if search.unknown_params.any?
+      return render :json => {:error => "unknown parameters", :unknown_params => search.unknown_params}, :status => 400
+    elsif search.specified?
       render :plain => GraphPresenter.response(search.family, search.killers, [search.playerid].compact)
     else
       render :nothing => true, :status => 404

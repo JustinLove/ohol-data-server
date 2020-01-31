@@ -1,5 +1,6 @@
 class LifeSearch
   def initialize(params)
+    @unknown_params = params.keys - known_params
     @epoch = params[:epoch]&.to_i
     @playerid = params[:playerid]&.to_i
     @lineage = params[:lineage]&.to_i
@@ -33,6 +34,7 @@ class LifeSearch
     @limit = params[:limit]&.to_i || 20000
   end
 
+  attr_reader :unknown_params
   attr_reader :server_id
   attr_reader :epoch
   attr_reader :playerid
@@ -72,5 +74,23 @@ class LifeSearch
         .where(Sequel[:birth_time] <= end_time)
     end
     result
+  end
+
+  def known_params
+    [
+      :controller,
+      :action,
+      :epoch,
+      :playerid,
+      :lineage,
+      :q,
+      :server_id,
+      :server_name,
+      :server_short,
+      :start_time,
+      :end_time,
+      :period,
+      :limit
+    ].map(&:to_s)
   end
 end

@@ -1,5 +1,6 @@
 class LineageSearch
   def initialize(params)
+    @unknown_params = params.keys - known_params
     @epoch = params[:epoch]&.to_i
     @playerid = params[:playerid]&.to_i
     @lineage = params[:lineage]&.to_i
@@ -32,6 +33,7 @@ class LineageSearch
     end
   end
 
+  attr_reader :unknown_params
   attr_reader :server_id
   attr_reader :playerid
   attr_reader :start_time
@@ -87,5 +89,23 @@ class LineageSearch
     DB[:lives]
       .where(:server_id => server_id, :epoch => epoch, :playerid => family.where(Sequel.~(:killer => nil)).select(:killer))
       .order(:birth_time)
+  end
+
+  def known_params
+    [
+      :controller,
+      :action,
+      :epoch,
+      :playerid,
+      :lineage,
+      :server_id,
+      :server_name,
+      :server_short,
+      :start_time,
+      :end_time,
+      :birth_time,
+      :death_time,
+      :limit
+    ].map(&:to_s)
   end
 end
