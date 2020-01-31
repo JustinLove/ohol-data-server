@@ -38,9 +38,11 @@ module Import
     end
 
     def self.load_server(logs, filesystem, objects)
-      servercode = "17"
-      placement_path = "pl/#{servercode}"
-      maplog_path = "pl/#{servercode}"
+      server = logs.server
+      server_id = Server.where(:server_name => server).pluck(:id).first
+      raise "server not found" if server_id.nil?
+      placement_path = "pl/#{server_id}"
+      maplog_path = "pl/#{server_id}"
 
       final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(placement_path, filesystem, objects)
 
