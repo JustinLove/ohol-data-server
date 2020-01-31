@@ -43,7 +43,7 @@ module Import
 
       monuments.each do |monument|
         static << {
-          :date => monument.date,
+          :date => monument.date&.to_i,
           :x => monument.x,
           :y => monument.y,
         }
