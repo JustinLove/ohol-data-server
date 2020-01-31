@@ -10,18 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_25_042747) do
+ActiveRecord::Schema.define(version: 2020_01_31_170857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
-
-  create_table "arcs", force: :cascade do |t|
-    t.integer "server_id", null: false
-    t.datetime "start", null: false
-    t.datetime "end", null: false
-    t.bigint "seed", null: false
-  end
 
   create_table "lifelog_files", force: :cascade do |t|
     t.string "path"

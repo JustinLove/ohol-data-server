@@ -4,6 +4,5 @@ Rails.application.routes.draw do
   resources :lives, only: [:index]
   resources :monuments, only: [:index]
   resources :servers, only: [:index]
-  resources :arcs, only: [:index]
   resources :family_trees, only: [:index]
 end
