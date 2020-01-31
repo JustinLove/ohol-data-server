@@ -3,8 +3,8 @@ namespace :monuments do
     require 'import/monuments'
     p 'before', DB[:monuments].count
 
-    cache = "../ohol-family-trees/cache/monuments"
-    output_dir = "../ohol-family-trees/output"
+    cache = ENV['OHOL_FILE_CACHE'] + 'monuments'
+    output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Monuments.load_cache(cache, output_dir)
 
     p 'after', DB[:monuments].count
@@ -14,7 +14,7 @@ namespace :monuments do
     require 'import/monuments'
     p 'before', DB[:monuments].count
 
-    output_bucket = 'wondible-com-ohol-tiles'
+    output_bucket = ENV['OUTPUT_BUCKET']
     Import::Monuments.fetch(output_bucket)
 
     p 'after', DB[:monuments].count

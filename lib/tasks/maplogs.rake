@@ -1,14 +1,14 @@
 namespace :maplogs do
   task :test => :environment do
     require 'import/maplogs'
-    cache = "../ohol-family-trees/cache/map"
-    output_dir = "../ohol-family-trees/output"
+    cache = ENV['OHOL_FILE_CACHE'] + 'map'
+    output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Maplogs.load_cache(cache, output_dir)
   end
 
   task :update => :environment do
     require 'import/maplogs'
-    output_bucket = 'wondible-com-ohol-tiles'
+    output_bucket = ENV['OUTPUT_BUCKET']
     Import::Maplogs.fetch(output_bucket)
   end
 end

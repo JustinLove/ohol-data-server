@@ -3,8 +3,8 @@ namespace :lives do
     require 'import/lives'
     p 'before', DB[:lives].count
 
-    cache = "../ohol-family-trees/cache/"
-    output_dir = "../ohol-family-trees/output"
+    cache = ENV['OHOL_FILE_CACHE']
+    output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Lives.load_cache(cache, output_dir)
 
     #path = "lifeLog_bigserver2.onehouronelife.com/2019_02February_20_Wednesday.txt"
@@ -21,7 +21,7 @@ namespace :lives do
     require 'import/lives'
     p 'before', DB[:lives].count
 
-    output_bucket = 'wondible-com-ohol-tiles'
+    output_bucket = ENV['OUTPUT_BUCKET']
     Import::Lives.fetch(output_bucket)
 
     p 'after', DB[:lives].count

@@ -1,2 +1,3 @@
 lives_test: bundle exec rails lives:test
+monuments_test: bundle exec rails monuments:test
 maplogs_update: bundle exec rails maplogs:update
