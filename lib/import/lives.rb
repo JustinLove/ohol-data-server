@@ -2,24 +2,40 @@ require 'ohol-family-trees/lifelog'
 require 'ohol-family-trees/history'
 require 'ohol-family-trees/lifelog_cache'
 require 'ohol-family-trees/lifelog_server'
+require 'ohol-family-trees/filesystem_local'
+require 'ohol-family-trees/filesystem_s3'
+require 'json'
 
 module Import
   module Lives
-    def self.load_cache(cache)
-      load_collection(OHOLFamilyTrees::LifelogCache::Servers.new(cache))
+    def self.load_cache(cache, output_dir)
+      filesystem = OHOLFamilyTrees::FilesystemLocal.new(output_dir)
+      collection = OHOLFamilyTrees::LifelogCache::Servers.new(cache)
+      load_collection(collection, filesystem)
     end
 
-    def self.fetch
-      load_collection(OHOLFamilyTrees::LifelogServer::Servers.new)
+    def self.fetch(output_bucket)
+      filesystem = OHOLFamilyTrees::FilesystemS3.new(output_bucket)
+      collection = OHOLFamilyTrees::LifelogServer::Servers.new
+      load_collection(collection, filesystem)
     end
 
-    def self.load_collection(collection)
+    def self.load_collection(collection, filesystem)
       collection.each do |logs|
         p logs.server
         Raven.extra_context(:import_server => logs.server)
         load_server(logs)
       end
+      write_servers(filesystem)
       set_lineage
+    end
+
+    def self.write_servers(filesystem)
+      servers = ServerList.new.servers
+      json = ServerPresenter.response(servers)
+      filesystem.write('data/servers.json') do |f|
+        f << JSON.generate(json)
+      end
     end
 
     def self.set_lineage
