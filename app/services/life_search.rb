@@ -4,6 +4,7 @@ class LifeSearch
     @epoch = params[:epoch]&.to_i
     @playerid = params[:playerid]&.to_i
     @lineage = params[:lineage]&.to_i
+    @chain = params[:chain]&.to_i
     @query = params[:q]
     if params[:server_id]
       @server_id = params[:server_id].to_i
@@ -39,6 +40,7 @@ class LifeSearch
   attr_reader :epoch
   attr_reader :playerid
   attr_reader :lineage
+  attr_reader :chain
   attr_reader :query
   attr_reader :start_time
   attr_reader :end_time
@@ -50,6 +52,7 @@ class LifeSearch
       :epoch => epoch,
       :playerid => playerid,
       :lineage => lineage,
+      :chain => chain,
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
@@ -83,6 +86,7 @@ class LifeSearch
       :epoch,
       :playerid,
       :lineage,
+      :chain,
       :q,
       :server_id,
       :server_name,
