@@ -58,7 +58,7 @@ module Import
         DB[:monuments].insert(fields)
       end
 
-      json = {:data => static}
+      json = {:data => static.reverse}
       filesystem.write("data/monuments/#{server_id}.json") do |f|
         f << JSON.generate(json)
       end
