@@ -38,7 +38,7 @@ module Import
     end
 
     def self.load_server(logs, filesystem, objects)
-      server = logs.server
+      server = logs.server.sub('/', '')
       server_id = Server.where(:server_name => server).pluck(:id).first
       raise "server not found" if server_id.nil?
       placement_path = "pl/#{server_id}"
