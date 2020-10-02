@@ -56,6 +56,7 @@ class LifeSearch
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
+      .join_table(:left, :names, :id => :names_id)
       .where(Sequel.~(:birth_time => nil))
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
@@ -64,8 +65,8 @@ class LifeSearch
         result = result.where(:account_hash => query)
       else
         result = result
-          .where(Sequel.lit('? <% name', query))
-          .order_prepend(Sequel.desc(Sequel.function(:word_similarity, query, :name)))
+          .where(Sequel.lit('? <% names.name', query))
+          .order_prepend(Sequel.desc(Sequel.function(:word_similarity, query, Sequel[:names][:name])))
       end
     end
     if start_time

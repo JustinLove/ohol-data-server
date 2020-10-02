@@ -41,4 +41,9 @@ namespace :lives do
     require 'import/lives'
     Import::Lives.patch_killer
   end
+
+  task :copy_names => :environment do
+    require 'import/lives'
+    Import::Lives.copy_names
+  end
 end

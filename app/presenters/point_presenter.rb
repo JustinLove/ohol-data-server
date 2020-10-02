@@ -32,7 +32,7 @@ class PointPresenter
       :birth_time,
       :chain,
       :lineage,
-      :name,
+      Sequel[:names][:name],
       :server_id,
       :epoch,
       :playerid,

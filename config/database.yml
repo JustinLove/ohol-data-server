@@ -57,7 +57,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: ohol-data-server_test
+  database: ohol-data-server_development
   username: postgres
   password: password
 

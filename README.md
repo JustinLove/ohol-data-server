@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## System dependencies
 
-Things you may want to cover:
+Family trees use graphviz. On Heroku this requires a custom buildpack
 
-* Ruby version
+## Database setup
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- rails db:create
+- rails db:migrate
+- rails db:seed
+- rails lives:test
+- rails lives:patch_lineage

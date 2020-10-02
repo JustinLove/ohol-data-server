@@ -81,12 +81,14 @@ class LineageSearch
 
   def family
     DB[:lives]
+      .join_table(:left, :names, :id => :names_id)
       .where(:server_id => server_id, :epoch => epoch, :lineage => lineage)
       .order(:birth_time)
   end
 
   def killers
     DB[:lives]
+      .join_table(:left, :names, :id => :names_id)
       .where(:server_id => server_id, :epoch => epoch, :playerid => family.where(Sequel.~(:killer => nil)).select(:killer))
       .order(:birth_time)
   end

@@ -292,5 +292,14 @@ module Import
         end
       end
     end
+
+    def self.copy_names
+      DB[:names].insert([:name],
+        DB[:lives].where(Sequel.~(:name => nil)).select_group(:name)
+      )
+      DB[:lives].update(:names_id =>
+        DB[:names].where(:name => Sequel[:lives][:name]).select(:id)
+      )
+    end
   end
 end

@@ -15,7 +15,7 @@ class GraphPresenter
       :cause,
       :killer,
       :age,
-      :name,
+      Sequel[:names][:name],
       :account_hash,
       :gender,
     ]
