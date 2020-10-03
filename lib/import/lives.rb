@@ -265,7 +265,19 @@ module Import
         namelogs << log
       end
 
+      names = namelogs.map {|namelog| [namelog.name]}
+      p "names: #{names.length}"
+      Name.import ([:name]),
+        names,
+        :on_duplicate_key_ignore => true
+
       if namelogs.any? && namelogs.first.playerid < namelogs.last.playerid
+        names = namelogs.map {|namelog| namelog.name}
+        name_table = DB[:names].where(:name => names).select(:id, :name)
+        name_map = {}
+        name_table.each do |row|
+          name_map[row[:name]] = row[:id]
+        end
         epoch = 0
         namelogs.find do |namelog|
           epochs = Life.where(:server_id => serverid, :playerid => namelog.playerid)
@@ -275,20 +287,25 @@ module Import
             true
           end
         end
-        names = namelogs.map {|namelog| [serverid, epoch, namelog.playerid, 'nameonly', namelog.name]}
-        p "names: #{names.length}"
-        Life.import (key_columns + [:account_hash, :name]),
+        names = namelogs.map {|namelog|
+          [serverid, epoch, namelog.playerid, 'nameonly', name_map[namelog.name]]
+        }
+        Life.import (key_columns + [:account_hash, :names_id]),
           names,
           :on_duplicate_key_update => {
             :conflict_target => key_columns,
-            :columns => [:name],
+            :columns => [:names_id],
           }
         Life.where(:account_hash => 'nameonly').delete_all
       else
         namelogs.each do |namelog|
-          Life.where(:server_id => serverid, :playerid => namelog.playerid)
-            .order("epoch desc").limit(1)
-            .update(:name => namelog.name)
+          DB[:lives].where(:id =>
+            DB[:lives]
+              .where(:server_id => serverid, :playerid => namelog.playerid)
+              .order(Sequel[:epoch].desc).limit(1)
+              .select(:id)
+          ).update(:names_id =>
+            DB[:names].where(:name => namelog.name).select(:id))
         end
       end
     end

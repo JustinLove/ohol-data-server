@@ -2,7 +2,7 @@
 - separate tables
   - x created names
   - x updated name queries
-  - import names to separate table
+  - x import names to separate table
   - remove names from lives
   - create accounts
   - upate hashs queries
