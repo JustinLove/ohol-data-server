@@ -46,4 +46,9 @@ namespace :lives do
     require 'import/lives'
     Import::Lives.copy_names
   end
+
+  task :copy_accounts => :environment do
+    require 'import/lives'
+    Import::Lives.copy_accounts
+  end
 end

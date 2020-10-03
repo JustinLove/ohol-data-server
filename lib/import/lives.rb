@@ -318,5 +318,14 @@ module Import
         DB[:names].where(:name => Sequel[:lives][:name]).select(:id)
       )
     end
+
+    def self.copy_accounts
+      DB[:accounts].insert([:account_hash],
+        DB[:lives].where(Sequel.~(:account_hash => nil)).select_group(:account_hash)
+      )
+      DB[:lives].update(:account_id =>
+        DB[:accounts].where(:account_hash => Sequel[:lives][:account_hash]).select(:id)
+      )
+    end
   end
 end

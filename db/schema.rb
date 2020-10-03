@@ -10,11 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_03_163011) do
+ActiveRecord::Schema.define(version: 2020_10_03_163717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string "account_hash"
+    t.index ["account_hash"], name: "index_accounts_on_account_hash", unique: true
+  end
 
   create_table "lifelog_files", force: :cascade do |t|
     t.string "path"
@@ -43,7 +48,9 @@ ActiveRecord::Schema.define(version: 2020_10_03_163011) do
     t.integer "killer"
     t.integer "lineage"
     t.bigint "name_id"
+    t.bigint "account_id"
     t.index ["account_hash"], name: "index_lives_on_account_hash"
+    t.index ["account_id"], name: "index_lives_on_account_id"
     t.index ["birth_time"], name: "index_lives_on_birth_time"
     t.index ["death_time"], name: "index_lives_on_death_time"
     t.index ["name_id"], name: "index_lives_on_name_id"
@@ -71,5 +78,6 @@ ActiveRecord::Schema.define(version: 2020_10_03_163011) do
     t.string "server_name"
   end
 
+  add_foreign_key "lives", "accounts"
   add_foreign_key "lives", "names"
 end
