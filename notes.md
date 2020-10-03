@@ -6,8 +6,8 @@
   - x remove names from lives
   - x create accounts
   - x upate hashs queries
-  - import hashes to separate table
-  - delete hash from lives
+  - x import hashes to separate table
+  - delete hash from lives - remove hash from import
 - web api design
 - unknown and not found parameters
 - large family trees

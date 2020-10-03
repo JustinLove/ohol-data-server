@@ -148,6 +148,22 @@ module Import
 
       return unless lives.length > 0
 
+
+      accounts = []
+      lives.each {|life| accounts << [life.hash]}
+      p "accounts: #{accounts.length}"
+      Account.import ([:account_hash]),
+        accounts,
+        :on_duplicate_key_ignore => true
+
+      accounts = []
+      lives.each {|life| accounts << life.name}
+      account_table = DB[:accounts].where(:account_hash => accounts).select(:id, :account_hash)
+      account_map = {}
+      account_table.each do |row|
+        account_map[row[:account_hash]] = row[:id]
+      end
+
       epoch = Life.where(:server_id => serverid).where('birth_time < ?', Time.at(lives.lives.values.first.time)).maximum(:epoch) || 0
 
       p "initial epoch #{epoch}"
@@ -161,7 +177,7 @@ module Import
           epoch += 1
           p "epoch advanced #{epoch}"
         end
-        record = [serverid, epoch, life.playerid] + common_data(life)
+        record = [serverid, epoch, life.playerid] + common_data(life, account_map)
         if life.birth_time && life.death_time
           record += birth_data(life) + death_data(life)
           both << record
@@ -199,11 +215,11 @@ module Import
     end
 
     def self.common_columns
-      [:account_hash, :gender]
+      [:account_hash, :account_id, :gender]
     end
 
-    def self.common_data(life)
-      [life.hash, life.gender]
+    def self.common_data(life, account_map)
+      [life.hash, account_map[life.hash], life.gender]
     end
 
     def self.birth_columns
@@ -290,13 +306,13 @@ module Import
         names = namelogs.map {|namelog|
           [serverid, epoch, namelog.playerid, 'nameonly', name_map[namelog.name]]
         }
-        Life.import (key_columns + [:account_hash, :name_id]),
+        Life.import (key_columns + [:name_id]),
           names,
           :on_duplicate_key_update => {
             :conflict_target => key_columns,
             :columns => [:name_id],
           }
-        Life.where(:account_hash => 'nameonly').delete_all
+        Life.where(:account_id => nil).delete_all
       else
         namelogs.each do |namelog|
           DB[:lives].where(:id =>
