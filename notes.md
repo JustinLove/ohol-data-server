@@ -1,4 +1,13 @@
 - new db host
+- separate tables
+  - x created names
+  - x updated name queries
+  - import names to separate table
+  - remove names from lives
+  - create accounts
+  - upate hashs queries
+  - import hashes to separate table
+  - delete hash from lives
 - web api design
 - unknown and not found parameters
 - large family trees
