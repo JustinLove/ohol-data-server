@@ -56,13 +56,15 @@ class LifeSearch
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
-      .join_table(:left, :names, :id => :name_id)
+      .left_join(:names, :id => :name_id)
       .where(Sequel.~(:birth_time => nil))
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)
     if query && !query.strip.empty?
       if query.length == 40
-        result = result.where(:account_hash => query)
+        result = result
+          .left_join(:accounts, :id => Sequel[:lives][:account_id])
+          .where(Sequel[:accounts][:account_hash] => query)
       else
         result = result
           .where(Sequel.lit('? <% names.name', query))

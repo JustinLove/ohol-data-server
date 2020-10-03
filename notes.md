@@ -4,8 +4,8 @@
   - x updated name queries
   - x import names to separate table
   - x remove names from lives
-  - create accounts
-  - upate hashs queries
+  - x create accounts
+  - x upate hashs queries
   - import hashes to separate table
   - delete hash from lives
 - web api design
