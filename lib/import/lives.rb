@@ -290,11 +290,11 @@ module Import
         names = namelogs.map {|namelog|
           [serverid, epoch, namelog.playerid, 'nameonly', name_map[namelog.name]]
         }
-        Life.import (key_columns + [:account_hash, :names_id]),
+        Life.import (key_columns + [:account_hash, :name_id]),
           names,
           :on_duplicate_key_update => {
             :conflict_target => key_columns,
-            :columns => [:names_id],
+            :columns => [:name_id],
           }
         Life.where(:account_hash => 'nameonly').delete_all
       else
@@ -304,7 +304,7 @@ module Import
               .where(:server_id => serverid, :playerid => namelog.playerid)
               .order(Sequel[:epoch].desc).limit(1)
               .select(:id)
-          ).update(:names_id =>
+          ).update(:name_id =>
             DB[:names].where(:name => namelog.name).select(:id))
         end
       end
@@ -314,7 +314,7 @@ module Import
       DB[:names].insert([:name],
         DB[:lives].where(Sequel.~(:name => nil)).select_group(:name)
       )
-      DB[:lives].update(:names_id =>
+      DB[:lives].update(:name_id =>
         DB[:names].where(:name => Sequel[:lives][:name]).select(:id)
       )
     end

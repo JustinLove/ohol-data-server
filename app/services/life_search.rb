@@ -56,7 +56,7 @@ class LifeSearch
     }.reject {|k,v| v.nil?}
 
     result = DB[:lives]
-      .join_table(:left, :names, :id => :names_id)
+      .join_table(:left, :names, :id => :name_id)
       .where(Sequel.~(:birth_time => nil))
       .order(Sequel.desc(:birth_time)).limit(limit)
       .where(match)

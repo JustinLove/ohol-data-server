@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_03_161146) do
+ActiveRecord::Schema.define(version: 2020_10_03_163011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -42,11 +42,11 @@ ActiveRecord::Schema.define(version: 2020_10_03_161146) do
     t.string "cause"
     t.integer "killer"
     t.integer "lineage"
-    t.bigint "names_id"
+    t.bigint "name_id"
     t.index ["account_hash"], name: "index_lives_on_account_hash"
     t.index ["birth_time"], name: "index_lives_on_birth_time"
     t.index ["death_time"], name: "index_lives_on_death_time"
-    t.index ["names_id"], name: "index_lives_on_names_id"
+    t.index ["name_id"], name: "index_lives_on_name_id"
     t.index ["server_id", "birth_time"], name: "index_lives_on_server_id_and_birth_time"
     t.index ["server_id", "epoch", "lineage"], name: "index_lives_on_server_id_and_epoch_and_lineage"
     t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
@@ -71,5 +71,5 @@ ActiveRecord::Schema.define(version: 2020_10_03_161146) do
     t.string "server_name"
   end
 
-  add_foreign_key "lives", "names", column: "names_id"
+  add_foreign_key "lives", "names"
 end
