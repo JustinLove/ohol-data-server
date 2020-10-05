@@ -119,7 +119,7 @@ module Import
         #p cache_path
         fetched_at = Time.now
         lifelog = LifelogFile.find_by_path(cache_path)
-        #p [logfile.date, lifelog.fetched_at, logfile.date > lifelog.fetched_at]
+        #p [logfile.date, lifelog.fetched_at.to_time, logfile.date > lifelog.fetched_at]
         next if lifelog && logfile.date < lifelog.fetched_at
 
         p "importing #{cache_path}"
@@ -157,7 +157,7 @@ module Import
         :on_duplicate_key_ignore => true
 
       accounts = []
-      lives.each {|life| accounts << life.name}
+      lives.each {|life| accounts << life.hash}
       account_table = DB[:accounts].where(:account_hash => accounts).select(:id, :account_hash)
       account_map = {}
       account_table.each do |row|
@@ -219,6 +219,7 @@ module Import
     end
 
     def self.common_data(life, account_map)
+      raise "no account for hash" unless account_map[life.hash]
       [life.hash, account_map[life.hash], life.gender]
     end
 
@@ -306,7 +307,7 @@ module Import
         names = namelogs.map {|namelog|
           [serverid, epoch, namelog.playerid, 'nameonly', name_map[namelog.name]]
         }
-        Life.import (key_columns + [:name_id]),
+        Life.import (key_columns + [:account_hash, :name_id]),
           names,
           :on_duplicate_key_update => {
             :conflict_target => key_columns,
