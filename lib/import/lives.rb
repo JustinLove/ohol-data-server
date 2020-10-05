@@ -215,12 +215,12 @@ module Import
     end
 
     def self.common_columns
-      [:account_hash, :account_id, :gender]
+      [:account_id, :gender]
     end
 
     def self.common_data(life, account_map)
       raise "no account for hash" unless account_map[life.hash]
-      [life.hash, account_map[life.hash], life.gender]
+      [account_map[life.hash], life.gender]
     end
 
     def self.birth_columns
@@ -305,9 +305,9 @@ module Import
           end
         end
         names = namelogs.map {|namelog|
-          [serverid, epoch, namelog.playerid, 'nameonly', name_map[namelog.name]]
+          [serverid, epoch, namelog.playerid, name_map[namelog.name]]
         }
-        Life.import (key_columns + [:account_hash, :name_id]),
+        Life.import (key_columns + [:name_id]),
           names,
           :on_duplicate_key_update => {
             :conflict_target => key_columns,

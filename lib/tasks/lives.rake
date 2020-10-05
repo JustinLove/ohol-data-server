@@ -11,8 +11,9 @@ namespace :lives do
     #logfile = OHOLFamilyTrees::LifelogCache::Logfile.new(path, cache)
     #Import::Lives.load_log(logfile)
 
-    #path = "../ohol-family-trees/cache/lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday_names.txt"
-    #Import::Lives.load_names(path)
+    #path = "lifeLog_bigserver2.onehouronelife.com/2019_06June_08_Saturday_names.txt"
+    #logfile = OHOLFamilyTrees::LifelogCache::Logfile.new(path, cache)
+    #Import::Lives.load_names(logfile)
 
     p 'after', DB[:lives].count
   end

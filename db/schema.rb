@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_03_172252) do
+ActiveRecord::Schema.define(version: 2020_10_05_150529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 2020_10_03_172252) do
     t.integer "server_id", null: false
     t.integer "epoch", null: false
     t.integer "playerid", null: false
-    t.string "account_hash", null: false
     t.datetime "birth_time"
     t.integer "birth_x"
     t.integer "birth_y"
@@ -49,7 +48,6 @@ ActiveRecord::Schema.define(version: 2020_10_03_172252) do
     t.integer "lineage"
     t.bigint "name_id"
     t.bigint "account_id"
-    t.index ["account_hash"], name: "index_lives_on_account_hash"
     t.index ["account_id"], name: "index_lives_on_account_id"
     t.index ["birth_time"], name: "index_lives_on_birth_time"
     t.index ["death_time"], name: "index_lives_on_death_time"
