@@ -1,4 +1,5 @@
 require 'ohol-family-trees/maplog_cache'
+require 'ohol-family-trees/maplog_list'
 require 'ohol-family-trees/maplog_server'
 require 'ohol-family-trees/object_data'
 require 'ohol-family-trees/output_final_placements'
@@ -44,15 +45,19 @@ module Import
       placement_path = "pl/#{server_id}"
       maplog_path = "pl/#{server_id}"
 
+      list = OHOLFamilyTrees::MaplogList::Logs.new(filesystem, "#{placement_path}/file_list.json")
+      list.update_from(logs)
+      list.checkpoint
+
       final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(placement_path, filesystem, objects)
 
       maplog = OHOLFamilyTrees::OutputMaplog.new(maplog_path, filesystem, objects)
 
       manual_resets = OHOLFamilyTrees::SeedBreak.read_manual_resets(filesystem, "#{placement_path}/manual_resets.txt")
-      seeds = OHOLFamilyTrees::SeedBreak.process(logs, manual_resets)
+      seeds = OHOLFamilyTrees::SeedBreak.process(list, manual_resets)
       seeds.save(filesystem, "#{placement_path}/seeds.json")
 
-      context = OHOLFamilyTrees::LogfileContext.new(seeds)
+      context = OHOLFamilyTrees::LogfileContext.process(seeds, list)
 
       logs.each do |logfile|
         cache_path = logfile.path
@@ -68,12 +73,8 @@ module Import
         #next unless logfile.path.match('2680185702seed') # multiple files one seed
         #next unless logfile.path.match('471901928seed') # bad middle start line
 
-        context.update!(logfile)
-
         if true
-          final_placements.process(logfile, {
-            :rootfile => context.root,
-            :basefile => context.base})
+          final_placements.process(logfile, context[logfile.path])
         end
         if true
           maplog.process(logfile)
