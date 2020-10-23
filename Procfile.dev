@@ -2,5 +2,6 @@ lives_test: bundle exec rails lives:test
 monuments_test: bundle exec rails monuments:test
 maplogs_test: bundle exec rails maplogs:test
 maplogs_update: bundle exec rails maplogs:update
+maplogs_timestamp_fixup_test: bundle exec rails maplogs:timestamp_fixup_test
 db_create: bundle exec rails db:create
 db: docker run --rm -it -p 5432:5432 --mount source=oholdataserver1,target=/var/lib/postgresql/data -e POSTGRES_PASSWORD=password postgres -c max_wal_size=4GB
