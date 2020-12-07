@@ -4,6 +4,7 @@ require 'ohol-family-trees/maplog_server'
 require 'ohol-family-trees/object_data'
 require 'ohol-family-trees/output_final_placements'
 require 'ohol-family-trees/output_maplog'
+require 'ohol-family-trees/output_activity_map'
 require 'ohol-family-trees/seed_break'
 require 'ohol-family-trees/logfile_context'
 require 'ohol-family-trees/filesystem_local'
@@ -57,6 +58,7 @@ module Import
       raise "server not found" if server_id.nil?
       placement_path = "pl/#{server_id}"
       maplog_path = "pl/#{server_id}"
+      actmap_path = "pl/#{server_id}"
 
       list = OHOLFamilyTrees::MaplogList::Logs.new(filesystem, "#{placement_path}/file_list.json", MaplogArchive)
       updated_files = Set.new
@@ -67,6 +69,8 @@ module Import
       final_placements = OHOLFamilyTrees::OutputFinalPlacements.new(placement_path, filesystem, objects)
 
       maplog = OHOLFamilyTrees::OutputMaplog.new(maplog_path, filesystem, objects)
+
+      actmap = OHOLFamilyTrees::OutputActivityMap.new(actmap_path, filesystem)
 
       manual_resets = OHOLFamilyTrees::SeedBreak.read_manual_resets(filesystem, "#{placement_path}/manual_resets.txt")
       seeds = OHOLFamilyTrees::SeedBreak.process(list, manual_resets)
@@ -105,6 +109,9 @@ module Import
         end
         if true
           maplog.process(logfile)
+        end
+        if true
+          actmap.process(logfile)
         end
       end
 
