@@ -1,13 +1,4 @@
-- new db host
-- separate tables
-  - x created names
-  - x updated name queries
-  - x import names to separate table
-  - x remove names from lives
-  - x create accounts
-  - x upate hashs queries
-  - x import hashes to separate table
-  - x delete hash from lives - remove hash from import
+- localhost cors
 - web api design
 - unknown and not found parameters
 - large family trees
