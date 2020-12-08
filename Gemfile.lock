@@ -108,17 +108,21 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
+    msgpack (1.2.10)
     msgpack (1.2.10-x64-mingw32)
     multipart-post (2.1.1)
     nio4r (2.3.1)
+    nokogiri (1.10.3)
+      mini_portile2 (~> 2.4.0)
     nokogiri (1.10.3-x64-mingw32)
       mini_portile2 (~> 2.4.0)
     options (2.3.2)
+    pg (1.1.4)
     pg (1.1.4-x64-mingw32)
     progress_bar (1.3.3)
       highline (>= 1.6, < 3)
       options (~> 2.3.0)
-    puma (3.12.1)
+    puma (3.12.6)
     rack (2.0.7)
     rack-cors (1.0.3)
     rack-test (1.1.0)
@@ -173,6 +177,7 @@ GEM
     websocket-extensions (0.1.3)
 
 PLATFORMS
+  ruby
   x64-mingw32
 
 DEPENDENCIES
@@ -183,7 +188,7 @@ DEPENDENCIES
   iso8601
   ohol-family-trees!
   pg (>= 0.18, < 2.0)
-  puma (~> 3.11)
+  puma (~> 3.12)
   rack-cors
   rails (~> 5.2.3)
   sentry-raven
