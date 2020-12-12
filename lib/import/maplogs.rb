@@ -54,10 +54,10 @@ module Import
 
     def self.load_server(logs, filesystem, objects)
       server_id = nil
-      if logs.server == 'bigserver2.onehouronelife.com'
+      server = logs.server.sub('/', '')
+      if server == 'bigserver2.onehouronelife.com'
         server_id = 17
       end
-      #server = logs.server.sub('/', '')
       #server_id = Server.where(:server_name => server).pluck(:id).first
       raise "server not found" if server_id.nil?
       placement_path = "pl/#{server_id}"
@@ -133,10 +133,10 @@ module Import
 
     def self.fixup_server(logs, filesystem, objects)
       server_id = nil
-      if logs.server == 'bigserver2.onehouronelife.com'
+      server = logs.server.sub('/', '')
+      if server == 'bigserver2.onehouronelife.com'
         server_id = 17
       end
-      #server = logs.server.sub('/', '')
       #server_id = Server.where(:server_name => server).pluck(:id).first
       raise "server not found" if server_id.nil?
       placement_path = "pl/#{server_id}"

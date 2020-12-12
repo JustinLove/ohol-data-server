@@ -1,4 +1,5 @@
 - https://devcenter.heroku.com/articles/ruby-memory-use
+- query by playerid
 - web api design
 - unknown and not found parameters
 - large family trees
