@@ -1,4 +1,4 @@
-- localhost cors
+- https://devcenter.heroku.com/articles/ruby-memory-use
 - web api design
 - unknown and not found parameters
 - large family trees
