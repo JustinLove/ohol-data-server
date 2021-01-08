@@ -3,7 +3,7 @@ namespace :lives do
     require 'import/lives'
     p 'before', DB[:lives].count
 
-    cache = ENV['OHOL_FILE_CACHE']
+    cache = ENV['OHOL_FILE_CACHE'] + 'publicLifeLogData/'
     output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Lives.load_cache(cache, output_dir)
 

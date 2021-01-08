@@ -1,7 +1,7 @@
 namespace :maplogs do
   task :test do
     require 'import/maplogs'
-    cache = ENV['OHOL_FILE_CACHE'] + 'map'
+    cache = ENV['OHOL_FILE_CACHE'] + 'publicMapChangeData'
     output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Maplogs.load_cache(cache, output_dir)
   end
@@ -14,7 +14,7 @@ namespace :maplogs do
 
   task :timestamp_fixup_test do
     require 'import/maplogs'
-    cache = ENV['OHOL_FILE_CACHE'] + 'map'
+    cache = ENV['OHOL_FILE_CACHE'] + 'publicMapChangeData'
     output_dir = ENV['LOCAL_OUTPUT_DIR']
     Import::Maplogs.timestamp_fixup_cache(cache, output_dir)
   end
