@@ -2,9 +2,11 @@ require 'ohol-family-trees/maplog_cache'
 require 'ohol-family-trees/maplog_list'
 require 'ohol-family-trees/maplog_server'
 require 'ohol-family-trees/object_data'
+require 'ohol-family-trees/notable_objects'
 require 'ohol-family-trees/output_final_placements'
 require 'ohol-family-trees/output_maplog'
 require 'ohol-family-trees/output_activity_map'
+require 'ohol-family-trees/output_object_search_index'
 require 'ohol-family-trees/seed_break'
 require 'ohol-family-trees/logfile_context'
 require 'ohol-family-trees/filesystem_local'
@@ -45,14 +47,16 @@ module Import
 
       raise "no object data" unless objects.object_size.length > 0
 
+      notable = OHOLFamilyTrees::NotableObjects.read_notable_objects(filesystem, 'data/onehouronelife_notable_objects.txt')
+
       collection.each do |logs|
         p logs.server
         Raven.extra_context(:import_server => logs.server)
-        load_server(logs, filesystem, objects)
+        load_server(logs, filesystem, objects, notable)
       end
     end
 
-    def self.load_server(logs, filesystem, objects)
+    def self.load_server(logs, filesystem, objects, notable)
       server_id = nil
       server = logs.server.sub('/', '')
       if server == 'bigserver2.onehouronelife.com'
@@ -63,6 +67,7 @@ module Import
       placement_path = "pl/#{server_id}"
       maplog_path = "pl/#{server_id}"
       actmap_path = "pl/#{server_id}"
+      objsearch_path = "pl/#{server_id}"
 
       list = OHOLFamilyTrees::MaplogList::Logs.new(filesystem, "#{placement_path}/file_list.json", MaplogArchive)
       updated_files = Set.new
@@ -75,6 +80,8 @@ module Import
       maplog = OHOLFamilyTrees::OutputMaplog.new(maplog_path, filesystem, objects)
 
       actmap = OHOLFamilyTrees::OutputActivityMap.new(actmap_path, filesystem)
+
+      objsearch = OHOLFamilyTrees::OutputObjectSearchIndex.new(objsearch_path, filesystem, objects, notable)
 
       manual_resets = OHOLFamilyTrees::SeedBreak.read_manual_resets(filesystem, "#{placement_path}/manual_resets.txt")
       seeds = OHOLFamilyTrees::SeedBreak.process(list, manual_resets)
@@ -107,6 +114,9 @@ module Import
               IO::copy_stream(logfile.open, archive)
             end
           end
+        end
+        if true
+          objsearch.process(logfile)
         end
         if true
           actmap.process(logfile)
