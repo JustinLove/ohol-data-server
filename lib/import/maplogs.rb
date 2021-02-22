@@ -11,6 +11,7 @@ require 'ohol-family-trees/seed_break'
 require 'ohol-family-trees/logfile_context'
 require 'ohol-family-trees/filesystem_local'
 require 'ohol-family-trees/filesystem_s3'
+require 'ohol-family-trees/cache_control'
 
 module Import
   module Maplogs
@@ -110,7 +111,7 @@ module Import
         if true
           if updated_files.member?(logfile.path)
             p 'updated file', logfile.path
-            filesystem.write(MaplogArchive + logfile.path) do |archive|
+            filesystem.write(MaplogArchive + logfile.path, CacheControl::OneYear) do |archive|
               IO::copy_stream(logfile.open, archive)
             end
           end
