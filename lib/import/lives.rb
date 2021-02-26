@@ -5,6 +5,7 @@ require 'ohol-family-trees/lifelog_server'
 require 'ohol-family-trees/filesystem_local'
 require 'ohol-family-trees/filesystem_s3'
 require 'ohol-family-trees/cache_control'
+require 'ohol-family-trees/content_type'
 require 'json'
 
 module Import
@@ -34,7 +35,7 @@ module Import
     def self.write_servers(filesystem)
       servers = ServerList.new.servers
       json = ServerPresenter.response(servers)
-      filesystem.write('data/servers.json', CacheControl::OneHour) do |f|
+      filesystem.write('data/servers.json', CacheControl::OneHour.merge(ContentType::Json)) do |f|
         f << JSON.generate(json)
       end
     end

@@ -4,6 +4,7 @@ require 'ohol-family-trees/monument_server'
 require 'ohol-family-trees/filesystem_local'
 require 'ohol-family-trees/filesystem_s3'
 require 'ohol-family-trees/cache_control'
+require 'ohol-family-trees/content_type'
 
 module Import
   module Monuments
@@ -60,7 +61,7 @@ module Import
       end
 
       json = {:data => static.reverse}
-      filesystem.write("data/monuments/#{server_id}.json", CacheControl::OneHour) do |f|
+      filesystem.write("data/monuments/#{server_id}.json", CacheControl::OneHour.merge(ContentType::Json)) do |f|
         f << JSON.generate(json)
       end
     end
