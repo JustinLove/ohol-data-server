@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/JustinLove/ohol-family-trees.git
-  revision: fa72b7be748d009f41107dce8848ec5f46d49e17
+  revision: f41911a61d60d6bde8092c97d50bfc0c1ea35a76
   branch: master
   specs:
     ohol-family-trees (0.0.0)
@@ -61,21 +61,21 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
-    aws-eventstream (1.1.0)
-    aws-partitions (1.416.0)
-    aws-sdk-core (3.111.1)
+    aws-eventstream (1.1.1)
+    aws-partitions (1.449.0)
+    aws-sdk-core (3.114.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.41.0)
-      aws-sdk-core (~> 3, >= 3.109.0)
+    aws-sdk-kms (1.43.0)
+      aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.87.0)
-      aws-sdk-core (~> 3, >= 3.109.0)
+    aws-sdk-s3 (1.94.0)
+      aws-sdk-core (~> 3, >= 3.112.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
-    aws-sigv4 (1.2.2)
+    aws-sigv4 (1.2.3)
       aws-eventstream (~> 1, >= 1.0.2)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
@@ -149,7 +149,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (12.3.2)
-    rexml (3.2.4)
+    rexml (3.2.5)
     ruby-graphviz (1.2.5)
       rexml
     sentry-raven (2.9.0)
