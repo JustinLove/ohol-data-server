@@ -1,4 +1,6 @@
 class LivesController < ApplicationController
+  include ActionController::MimeResponds
+
   def index
     search = LifeSearch.new(params)
     if search.unknown_params.any?
@@ -14,7 +16,10 @@ class LivesController < ApplicationController
     end
 
     if stale
-      render :json => PointPresenter.response(query)
+      respond_to do |format|
+        format.text { render :plain => PointPresenter.response_plain(query), :content_type => "text/plain" }
+        format.any { render :json => PointPresenter.response_json(query), :content_type => "application/json" }
+      end
     end
   end
 end

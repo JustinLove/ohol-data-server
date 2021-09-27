@@ -27,6 +27,61 @@ class PointPresenter
     }
   end
 
+  def as_plain
+    ([
+      int(props[:server_id]),
+      int(props[:epoch]),
+      int(props[:playerid]),
+      int(props[:birth_time]),
+      int(props[:birth_x]),
+      int(props[:birth_y]),
+      int(props[:birth_population]),
+      text(props[:gender]),
+      int(props[:lineage]),
+      int(props[:chain]),
+      int(props[:death_time]),
+      int(props[:death_x]),
+      int(props[:death_y]),
+      int(props[:death_population]),
+      float(props[:age]),
+      text(props[:cause]),
+    ] +
+    (props[:name] ? [ name(props[:name]) ] : [])
+    ).join(' ')
+  end
+
+  def int(x)
+    if x.nil?
+      'X'
+    else
+      x.to_i
+    end
+  end
+
+  def name(x)
+    if x
+      '"' + x + '"'
+    else
+      'X'
+    end
+  end
+
+  def float(x)
+    if x.nil?
+      'X'
+    else
+      x.to_f
+    end
+  end
+
+  def text(x)
+    if x.nil?
+      'X'
+    else
+      x
+    end
+  end
+
   def self.fields
     [
       :birth_x,
@@ -49,15 +104,24 @@ class PointPresenter
     ]
   end
 
-  def self.wrap(lives)
+  def self.wrap_json(lives)
     lives.map {|life| new(life).as_json}
   end
 
-  def self.response(query)
+  def self.wrap_plain(lives)
+    lives.map {|life| new(life).as_plain}
+  end
+
+  def self.response_json(query)
     lives = query.select(*PointPresenter.fields).all
     {
-      :data => PointPresenter.wrap(lives),
+      :data => PointPresenter.wrap_json(lives),
       #:total => query.unlimited.count, doubles query time
     }
+  end
+
+  def self.response_plain(query)
+    lives = query.select(*PointPresenter.fields).all
+    PointPresenter.wrap_plain(lives).join("\n")
   end
 end

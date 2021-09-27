@@ -86,6 +86,7 @@ class LifeSearch
     [
       :controller,
       :action,
+      :format,
       :epoch,
       :playerid,
       :lineage,
