@@ -9,6 +9,7 @@ class PointPresenter
     {
       :birth_x => props[:birth_x],
       :birth_y => props[:birth_y],
+      :birth_population => props[:birth_population]&.to_i,
       :birth_time => props[:birth_time]&.to_i,
       :chain => props[:chain],
       :lineage => props[:lineage],
@@ -19,6 +20,7 @@ class PointPresenter
       :age => props[:age],
       :death_x => props[:death_x],
       :death_y => props[:death_y],
+      :death_population => props[:death_population]&.to_i,
       :death_time => props[:death_time]&.to_i,
       :cause => props[:cause],
       :gender => props[:gender],
@@ -29,6 +31,7 @@ class PointPresenter
     [
       :birth_x,
       :birth_y,
+      :birth_population,
       :birth_time,
       :chain,
       :lineage,
@@ -39,6 +42,7 @@ class PointPresenter
       :age,
       :death_x,
       :death_y,
+      :death_population,
       :death_time,
       :cause,
       :gender,
