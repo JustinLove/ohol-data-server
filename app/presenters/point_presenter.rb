@@ -44,7 +44,7 @@ class PointPresenter
       int(props[:death_y]),
       int(props[:death_population]),
       float(props[:age]),
-      text(props[:cause]),
+      cause(props[:cause]),
     ] +
     (props[:name] ? [ name(props[:name]) ] : [])
     ).join(' ')
@@ -81,6 +81,24 @@ class PointPresenter
       x
     end
   end
+
+  def cause(x)
+    case x
+    when nil
+      'X'
+    when 'hunger'
+      'h'
+    when 'disconnect'
+      'd'
+    when 'oldAge'
+      'o'
+    when /^killer/
+      x.sub('killer_', 'k')
+    else
+      x
+    end
+  end
+
 
   def self.fields
     [
