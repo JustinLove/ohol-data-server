@@ -8,6 +8,10 @@ require 'ohol-family-trees/content_type'
 
 module Import
   module Monuments
+
+    Fools = DateTime.parse('Fri, 01 Apr 2022 13:00:00 +0000')..
+            DateTime.parse('Sat, 02 Apr 2022 03:00:00 +0000')
+
     def self.load_cache(cache, output_dir)
       filesystem = OHOLFamilyTrees::FilesystemLocal.new(output_dir)
       collection = OHOLFamilyTrees::MonumentCache::Servers.new(cache)
@@ -22,13 +26,19 @@ module Import
 
     def self.load_collection(collection, filesystem)
       count = collection.monument_count
-      known = DB[:monuments].count
-      p "#{count} monuments now, #{known} in db"
+      known = 0
+      filesystem.read("data/monuments/count.txt") do |f|
+        known = f.read.to_i
+      end
+      p "#{count} monuments now, #{known} previous"
       return if count && count <= known
       collection.each do |logfile|
         p logfile.server
         Raven.extra_context(:logfile => logfile.server)
         load_log(logfile, filesystem)
+      end
+      filesystem.write("data/monuments/count.txt", CacheControl::OneHour.merge(ContentType::Text)) do |f|
+        f << count.to_s
       end
     end
 
@@ -44,20 +54,12 @@ module Import
       static = []
 
       monuments.each do |monument|
+        next if server_id == 17 and Fools.cover? monument.date
         static << {
           :date => monument.date&.to_i,
           :x => monument.x,
           :y => monument.y,
         }
-        fields = {
-          :server_id => server_id,
-          :date => monument.date,
-          :x => monument.x,
-          :y => monument.y,
-        }
-        next if DB[:monuments].select(1).where(fields).any?
-
-        DB[:monuments].insert(fields)
       end
 
       json = {:data => static.reverse}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_160201) do
+ActiveRecord::Schema.define(version: 2022_04_02_161158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -58,13 +58,6 @@ ActiveRecord::Schema.define(version: 2022_03_28_160201) do
     t.index ["server_id", "epoch", "parent"], name: "index_lives_on_server_id_and_epoch_and_parent"
     t.index ["server_id", "epoch", "playerid"], name: "index_lives_on_server_id_and_epoch_and_playerid", unique: true
     t.index ["server_id"], name: "index_lives_on_server_id"
-  end
-
-  create_table "monuments", force: :cascade do |t|
-    t.integer "server_id"
-    t.datetime "date"
-    t.integer "x"
-    t.integer "y"
   end
 
   create_table "names", force: :cascade do |t|
