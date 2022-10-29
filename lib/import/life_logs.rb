@@ -10,7 +10,7 @@ require 'json'
 
 module Import
   module LifeLogs
-    LifelogArchive = 'publicLifeLogData/'
+    LifelogArchive = 'publicLifeLogData'
     def self.load_cache(cache, output_dir)
       filesystem = OHOLFamilyTrees::FilesystemLocal.new(output_dir)
       collection = OHOLFamilyTrees::LifelogCache::Servers.new(cache)
@@ -24,23 +24,32 @@ module Import
     end
 
     def self.load_collection(collection, filesystem)
+      server_list = load_servers(filesystem)
       collection.each do |logs|
         p logs.server
         Raven.extra_context(:import_server => logs.server)
-        load_server(logs, filesystem)
+        load_server(logs, filesystem, server_list)
       end
-      #write_servers(filesystem)
+      write_servers(filesystem, server_list)
     end
 
-    def self.write_servers(filesystem)
-      servers = ServerList.new.servers
-      json = ServerPresenter.response(servers)
+    def self.load_servers(filesystem)
+      server_list = []
+      filesystem.read('data/servers.json') do |f|
+        json = JSON.parse(f.read)
+        server_list = json["data"] if json
+      end
+      return server_list
+    end
+
+    def self.write_servers(filesystem, server_list)
+      json = {"data" => server_list}
       filesystem.write('data/servers.json', CacheControl::OneHour.merge(ContentType::Json)) do |f|
         f << JSON.generate(json)
       end
     end
 
-    def self.load_server(logs, filesystem)
+    def self.load_server(logs, filesystem, server_list)
       archive_path = "#{LifelogArchive}/lifeLog_#{logs.server}"
 
       list = OHOLFamilyTrees::LifelogList::Logs.new(filesystem, "#{archive_path}/file_list.json", "#{LifelogArchive}/")
@@ -52,22 +61,39 @@ module Import
       p 'updated', updated_files.length
       p 'list files', list.files.length
 
+      file_min = 0
+      file_max = 0
+
       list.each do |logfile|
         cache_path = logfile.path
         Raven.extra_context(:logfile => cache_path)
         #p cache_path
 
-        return unless logfile.logfile?
+        next unless logfile.logfile?
 
         if logs.has?(logfile.path)
           logfile = logs.get(logfile.path)
         end
+
+        date = logfile.approx_log_time
+        file_min = date if file_min == 0 || date < file_min
+        file_max = date if date > file_max
 
         if updated_files.member?(logfile.path)
           p 'updated file', logfile.path
           filesystem.write(LifelogArchive + '/' + logfile.path, CacheControl::OneYear.merge(ContentType::Text)) do |archive|
             IO::copy_stream(logfile.open, archive)
           end
+        end
+      end
+
+      file_max += 24*60*60
+      p [file_min.to_i, file_max.to_i]
+
+      server_list.each do |server|
+        if logs.server == server["server_name"]
+          server["min_time"] = file_min.to_i
+          server["max_time"] = file_max.to_i
         end
       end
 

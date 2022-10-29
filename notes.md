@@ -1,5 +1,6 @@
-- lifelog copying
-  - server list date updates
+- x lifelog copying
+  - x server list date updates
+  - reduce debug printing
 - lifelog preprocessing?
   - epocs
   - eves only?

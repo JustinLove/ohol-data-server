@@ -1,7 +1,7 @@
 namespace :lives do
-  task :test => [:test_logs, :test_records]
+  task :test => [:test_records, :test_logs]
 
-  task :update => [:update_logs, :update_records]
+  task :update => [:update_records, :update_logs]
 
   task :test_logs do
     require 'import/life_logs'
