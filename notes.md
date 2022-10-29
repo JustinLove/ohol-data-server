@@ -1,3 +1,20 @@
+- lifelog copying
+  - server list date updates
+- lifelog preprocessing?
+  - epocs
+  - eves only?
+  - lineages?
+- remove rails
+- update heroku stack
+- tree preprocessing????
+
+- monuments
+  - migration
+- automatic resets
+  - gem update
+  - data/onehouronelife_map_reset_objects.txt
+  - pl/17/automatic_resets.txt
+- monument processing depends on database for server list
 - https://devcenter.heroku.com/articles/ruby-memory-use
 - query by playerid
 - web api design

@@ -1,5 +1,6 @@
 web: bundle exec rails s
 lives_test: bundle exec rails lives:test
+lives_test_logs: bundle exec rails lives:test_logs
 monuments_test: bundle exec rails monuments:test
 maplogs_test: bundle exec rails maplogs:test
 maplogs_update: bundle exec rails maplogs:update

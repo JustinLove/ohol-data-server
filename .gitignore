@@ -25,3 +25,5 @@
 
 .env
 *.dump
+/output/
+/scripts/

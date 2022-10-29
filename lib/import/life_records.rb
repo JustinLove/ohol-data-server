@@ -9,7 +9,7 @@ require 'ohol-family-trees/content_type'
 require 'json'
 
 module Import
-  module Lives
+  module LifeRecords
     def self.load_cache(cache, output_dir)
       filesystem = OHOLFamilyTrees::FilesystemLocal.new(output_dir)
       collection = OHOLFamilyTrees::LifelogCache::Servers.new(cache)
@@ -120,10 +120,11 @@ module Import
         Raven.extra_context(:logfile => cache_path)
         #p cache_path
         fetched_at = Time.now
-        lifelog = LifelogFile.find_by_path(cache_path)
+        lifelog = LifelogFile.find_by_path(cache_path) # DB
         #p [logfile.date, lifelog.fetched_at.to_time, logfile.date > lifelog.fetched_at]
         next if lifelog && logfile.date < lifelog.fetched_at
 
+        # loading data
         p "importing #{cache_path}"
         if logfile.names?
           load_names(logfile)
@@ -131,10 +132,11 @@ module Import
           load_log(logfile)
         end
 
+        # tracking file status
         if lifelog
-          lifelog.update(:fetched_at => fetched_at)
+          lifelog.update(:fetched_at => fetched_at) # DB
         else
-          LifelogFile.create(:path => cache_path, :fetched_at => fetched_at)
+          LifelogFile.create(:path => cache_path, :fetched_at => fetched_at) # DB
         end
       end
     end
