@@ -81,8 +81,10 @@ module Import
 
         if updated_files.member?(logfile.path)
           p 'updated file', logfile.path
-          filesystem.write(LifelogArchive + '/' + logfile.path, CacheControl::OneYear.merge(ContentType::Text)) do |archive|
-            IO::copy_stream(logfile.open, archive)
+          if logfile.file_probably_complete?
+            filesystem.write(LifelogArchive + '/' + logfile.path, CacheControl::OneYear.merge(ContentType::Text)) do |archive|
+              IO::copy_stream(logfile.open, archive)
+            end
           end
         end
       end
