@@ -84,8 +84,9 @@ module Import
 
       objsearch = OHOLFamilyTrees::OutputObjectSearchIndex.new(objsearch_path, filesystem, objects, notable)
 
-      manual_resets = OHOLFamilyTrees::SeedBreak.read_manual_resets(filesystem, "#{placement_path}/manual_resets.txt")
-      seeds = OHOLFamilyTrees::SeedBreak.process(list, manual_resets)
+      manual_resets = OHOLFamilyTrees::SeedBreak.read_resets(filesystem, "#{placement_path}/manual_resets.txt")
+      automatic_resets = OHOLFamilyTrees::SeedBreak.read_resets(filesystem, "#{placement_path}/automatic_resets.txt")
+      seeds = OHOLFamilyTrees::SeedBreak.process(list, manual_resets, automatic_resets)
       seeds.save(filesystem, "#{placement_path}/seeds.json")
 
       context = OHOLFamilyTrees::LogfileContext.process(seeds, list)
