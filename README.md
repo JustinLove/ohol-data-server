@@ -38,3 +38,4 @@ docker run -it --rm postgres psql
 # add mount if you need the file outside docker
 PGPASSWORD=password pg_dump -h host.docker.internal -U postgres -Fc ohol-data-server_development > 2020-10-xx.dump
 PGPASSWORD=xxxxxxxxxxxxxxxx pg_restore -v --clean --no-acl --no-owner -h wondible-com-ohol-test-1.xxxxxxxxxxxx.us-east-1.rds.amazonaws.com -d ohol-data-server_production -U xxxxxxxxxxxxxxxx 2020-10-xx.dump
+
