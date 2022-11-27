@@ -6,9 +6,9 @@
   - x remove rails files
   - x remove rails gems
   - x jobs rake runnable
-  - better errors when tasks dont have env
-  - env cleanup
-  - jobs rake runnable
+  - x better errors when tasks dont have env
+  - x env cleanup
+  - x jobs rake runnable
 - update dependencies
   - sentry-raven -> sentry-ruby
 Raven.configure do |config|
