@@ -4,8 +4,8 @@
   - x procfile cleanup
   - x db tasks
   - x remove rails files
-  - remove rails gems
-  - jobs rake runnable
+  - x remove rails gems
+  - x jobs rake runnable
   - better errors when tasks dont have env
   - env cleanup
   - jobs rake runnable
