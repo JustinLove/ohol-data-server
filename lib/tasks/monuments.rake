@@ -1,5 +1,4 @@
 namespace :monuments do
-  # environment: server name mapping table
   task :test do
     require 'import/monuments'
     cache = ENV['OHOL_FILE_CACHE'] + 'monuments'

@@ -27,7 +27,7 @@ module Import
       server_list = load_servers(filesystem)
       collection.each do |logs|
         p logs.server
-        Raven.extra_context(:import_server => logs.server)
+        #Raven.extra_context(:import_server => logs.server)
         load_server(logs, filesystem, server_list)
       end
       write_servers(filesystem, server_list)
@@ -61,12 +61,13 @@ module Import
       p ['updated', updated_files.length]
       #p 'list files', list.files.length
 
-      file_min = 0
-      file_max = 0
+      zero = Time.at(0)
+      file_min = zero
+      file_max = zero
 
       list.each do |logfile|
-        cache_path = logfile.path
-        Raven.extra_context(:logfile => cache_path)
+        #cache_path = logfile.path
+        #Raven.extra_context(:logfile => cache_path)
         #p cache_path
 
         next unless logfile.logfile?
@@ -76,7 +77,7 @@ module Import
         end
 
         date = logfile.approx_log_time
-        file_min = date if file_min == 0 || date < file_min
+        file_min = date if file_min == zero || date < file_min
         file_max = date if date > file_max
 
         if updated_files.member?(logfile.path)

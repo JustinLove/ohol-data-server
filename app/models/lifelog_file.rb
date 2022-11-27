@@ -1,2 +1,0 @@
-class LifelogFile < ApplicationRecord
-end

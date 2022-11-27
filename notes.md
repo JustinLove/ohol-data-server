@@ -3,13 +3,22 @@
   - x jobs rake runnable
   - x procfile cleanup
   - x db tasks
-  - remove rails files
+  - x remove rails files
   - remove rails gems
   - jobs rake runnable
+  - better errors when tasks dont have env
   - env cleanup
   - jobs rake runnable
 - update dependencies
+  - sentry-raven -> sentry-ruby
+Raven.configure do |config|
+  config.environments = ['production']
+  unless config.environments.include?(Rails.env)
+    config.dsn = nil
+  end
+end
 - update heroku stack
+  - dont need graphviz
 - lifelog preprocessing?
   - epocs
   - eves only?
