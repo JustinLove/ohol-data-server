@@ -27,7 +27,7 @@ module Import
       server_list = load_servers(filesystem)
       collection.each do |logs|
         p logs.server
-        #Raven.extra_context(:import_server => logs.server)
+        Sentry.with_scope {|scope| scope.set_extras(:import_server => logs.server)}
         load_server(logs, filesystem, server_list)
       end
       write_servers(filesystem, server_list)
@@ -66,8 +66,8 @@ module Import
       file_max = zero
 
       list.each do |logfile|
-        #cache_path = logfile.path
-        #Raven.extra_context(:logfile => cache_path)
+        cache_path = logfile.path
+        Sentry.with_scope {|scope| scope.set_extras(:logfile => cache_path)}
         #p cache_path
 
         next unless logfile.logfile?

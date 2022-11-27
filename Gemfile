@@ -5,7 +5,7 @@ ruby '2.6.6'
 
 #gem 'ohol-family-trees', :path => '../ohol-family-trees'
 gem 'ohol-family-trees', :github => 'JustinLove/ohol-family-trees', :branch => 'master'
-gem 'sentry-raven'
+gem 'sentry-ruby'
 gem 'rake'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

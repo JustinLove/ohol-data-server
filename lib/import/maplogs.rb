@@ -52,7 +52,7 @@ module Import
 
       collection.each do |logs|
         p logs.server
-        #Raven.extra_context(:import_server => logs.server)
+        Sentry.with_scope {|scope| scope.set_extras(:import_server => logs.server)}
         load_server(logs, filesystem, objects, notable)
       end
     end
@@ -92,8 +92,8 @@ module Import
       context = OHOLFamilyTrees::LogfileContext.process(seeds, list)
 
       list.each do |logfile|
-        #cache_path = logfile.path
-        #Raven.extra_context(:logfile => cache_path)
+        cache_path = logfile.path
+        Sentry.with_scope {|scope| scope.set_extras(:logfile => cache_path)}
         #p cache_path
 
         next unless logfile.placements?
@@ -138,7 +138,7 @@ module Import
       objects = OHOLFamilyTrees::ObjectData.new
       collection.each do |logs|
         p logs.server
-        #Raven.extra_context(:import_server => logs.server)
+        Sentry.with_scope {|scope| scope.set_extras(:import_server => logs.server)}
         fixup_server(logs, filesystem, objects)
       end
     end
@@ -162,8 +162,8 @@ module Import
       maplog = OHOLFamilyTrees::OutputMaplog.new(maplog_path, filesystem, objects)
 
       list.each do |logfile|
-        #cache_path = logfile.path
-        #Raven.extra_context(:logfile => cache_path)
+        cache_path = logfile.path
+        Sentry.with_scope {|scope| scope.set_extras(:logfile => cache_path)}
         #p cache_path
 
         next unless logfile.placements?

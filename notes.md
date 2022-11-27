@@ -10,13 +10,7 @@
   - x env cleanup
   - x jobs rake runnable
 - update dependencies
-  - sentry-raven -> sentry-ruby
-Raven.configure do |config|
-  config.environments = ['production']
-  unless config.environments.include?(Rails.env)
-    config.dsn = nil
-  end
-end
+  - x sentry-raven -> sentry-ruby
 - update heroku stack
   - dont need graphviz
 - lifelog preprocessing?

@@ -35,7 +35,7 @@ module Import
       server_list = load_servers(filesystem)
       collection.each do |logfile|
         p logfile.server
-        #Raven.extra_context(:logfile => logfile.server)
+        Sentry.with_scope {|scope| scope.set_extras(:logfile => logfile.server)}
         load_log(logfile, filesystem, server_list)
       end
       filesystem.write("data/monuments/count.txt", CacheControl::OneHour.merge(ContentType::Text)) do |f|
