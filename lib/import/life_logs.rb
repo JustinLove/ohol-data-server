@@ -53,13 +53,13 @@ module Import
       archive_path = "#{LifelogArchive}/lifeLog_#{logs.server}"
 
       list = OHOLFamilyTrees::LifelogList::Logs.new(filesystem, "#{archive_path}/file_list.json", "#{LifelogArchive}/")
-      p 'list files', list.files.length
+      #p 'list files', list.files.length
       updated_files = Set.new
       list.update_from(logs) do |logfile|
         updated_files << logfile.path
       end
-      p 'updated', updated_files.length
-      p 'list files', list.files.length
+      p ['updated', updated_files.length]
+      #p 'list files', list.files.length
 
       file_min = 0
       file_max = 0
@@ -81,7 +81,7 @@ module Import
 
         if updated_files.member?(logfile.path)
           if logfile.file_probably_complete?
-            p 'updated file', logfile.path
+            #p 'updated file', logfile.path
             filesystem.write(LifelogArchive + '/' + logfile.path, CacheControl::OneYear.merge(ContentType::Text)) do |archive|
               IO::copy_stream(logfile.open, archive)
             end
