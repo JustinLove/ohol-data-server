@@ -1,18 +1,6 @@
-- remove rails
-  - x monument processing depends on database for server list
-  - x jobs rake runnable
-  - x procfile cleanup
-  - x db tasks
-  - x remove rails files
-  - x remove rails gems
-  - x jobs rake runnable
-  - x better errors when tasks dont have env
-  - x env cleanup
-  - x jobs rake runnable
-- update dependencies
-  - x sentry-raven -> sentry-ruby
 - update heroku stack
-  - dont need graphviz
+  - heroku buildpacks:remove https://github.com/weibeld/heroku-buildpack-graphviz.git -a ohol-data-
+  - heroku stack:set heroku-22 -a ohol-data-
 - lifelog preprocessing?
   - epocs
   - eves only?
