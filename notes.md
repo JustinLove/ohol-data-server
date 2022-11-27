@@ -1,30 +1,26 @@
-- x lifelog copying
-  - x server list date updates
-  - reduce debug printing
+- remove rails
+  - x monument processing depends on database for server list
+  - x jobs rake runnable
+  - x procfile cleanup
+  - x db tasks
+  - remove rails files
+  - remove rails gems
+  - jobs rake runnable
+  - env cleanup
+  - jobs rake runnable
+- update dependencies
+- update heroku stack
 - lifelog preprocessing?
   - epocs
   - eves only?
   - lineages?
-- remove rails
-- update heroku stack
 - tree preprocessing????
 
-- monuments
-  - migration
 - automatic resets
   - gem update
   - data/onehouronelife_map_reset_objects.txt
   - pl/17/automatic_resets.txt
-- monument processing depends on database for server list
 - https://devcenter.heroku.com/articles/ruby-memory-use
-- query by playerid
-- web api design
-- unknown and not found parameters
-- large family trees
-- protocol buffers (or something like that)
-- common query caching
-  - request cache?
-  - upload static files?
 
 Test commands, need to develop to regular usage state
 docker run -it --rm -e PGPASSWORD=password postgres psql -h host.docker.internal -U postgres -d ohol-data-server_development

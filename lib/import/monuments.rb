@@ -32,21 +32,32 @@ module Import
       end
       p "#{count} monuments now, #{known} previous"
       return if count && count <= known
+      server_list = load_servers(filesystem)
       collection.each do |logfile|
         p logfile.server
         Raven.extra_context(:logfile => logfile.server)
-        load_log(logfile, filesystem)
+        load_log(logfile, filesystem, server_list)
       end
       filesystem.write("data/monuments/count.txt", CacheControl::OneHour.merge(ContentType::Text)) do |f|
         f << count.to_s
       end
     end
 
-    def self.load_log(logfile, filesystem)
+    def self.load_servers(filesystem)
+      server_list = []
+      filesystem.read('data/servers.json') do |f|
+        json = JSON.parse(f.read)
+        server_list = json["data"] if json
+      end
+      return server_list
+    end
+
+    def self.load_log(logfile, filesystem, server_list)
       p "importing #{logfile.path}"
 
       server = logfile.server
-      server_id = Server.where(:server_name => server).pluck(:id).first
+      server_id = server_list.filter {|s| s["server_name"] == server}.map {|s| s["id"]}.first
+
       raise "server not found" if server_id.nil?
 
       monuments = OHOLFamilyTrees::Monument.load_log(logfile)
