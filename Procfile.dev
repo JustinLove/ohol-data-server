@@ -1,6 +1,7 @@
 lives_test_logs: bundle exec rake lives:test_logs
 lives_update_logs: bundle exec rake lives:update_logs
 monuments_test: bundle exec rake monuments:test
+monuments_update: bundle exec rake monuments:update
 maplogs_test: bundle exec rake maplogs:test
 maplogs_update: bundle exec rake maplogs:update
 maplogs_timestamp_fixup_test: bundle exec rake maplogs:timestamp_fixup_test
