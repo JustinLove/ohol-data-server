@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/JustinLove/ohol-family-trees.git
-  revision: f4a7010809c291cc8673078467020e54f7e2de74
+  revision: 31211c2e73e81b97afaf114838c77c7e52fb49a9
   branch: master
   specs:
     ohol-family-trees (0.0.0)
@@ -39,7 +39,9 @@ GEM
     highline (2.0.3)
     httpclient (2.8.3)
     jmespath (1.6.2)
-    nokogiri (1.13.9-x64-mingw32)
+    mini_portile2 (2.8.0)
+    nokogiri (1.13.9)
+      mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     options (2.3.2)
     progress_bar (1.3.3)
@@ -56,6 +58,7 @@ GEM
     thor (1.2.1)
 
 PLATFORMS
+  x64-mingw-ucrt
   x64-mingw32
 
 DEPENDENCIES
@@ -64,7 +67,7 @@ DEPENDENCIES
   sentry-ruby
 
 RUBY VERSION
-   ruby 2.6.6p146
+   ruby 3.1.2p20
 
 BUNDLED WITH
-   1.17.2
+   2.3.7

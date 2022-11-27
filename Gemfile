@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.6'
+ruby '3.1.2'
 
 #gem 'ohol-family-trees', :path => '../ohol-family-trees'
 gem 'ohol-family-trees', :github => 'JustinLove/ohol-family-trees', :branch => 'master'
