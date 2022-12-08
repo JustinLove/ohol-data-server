@@ -1,6 +1,3 @@
-- update heroku stack
-  - heroku buildpacks:remove https://github.com/weibeld/heroku-buildpack-graphviz.git -a ohol-data-
-  - heroku stack:set heroku-22 -a ohol-data-
 - lifelog preprocessing?
   - epocs
   - eves only?

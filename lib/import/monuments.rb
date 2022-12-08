@@ -67,7 +67,7 @@ module Import
       monuments.each do |monument|
         next if server_id == 17 and Fools.cover? monument.date
         static << {
-          :date => monument.date&.to_i,
+          :date => monument.date&.to_time&.to_i,
           :x => monument.x,
           :y => monument.y,
         }
